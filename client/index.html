@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Alqudimi Technology - حلول تقنية متطورة</title>
+    <meta name="description" content="Alqudimi Technology - شركة تقنية رائدة متخصصة في تطوير الحلول الرقمية المتقدمة. خدمات تطوير المواقع، تطبيقات الموبايل، والذكاء الاصطناعي." />
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Alqudimi Technology - تكنولوجيا القديمي" />
+    <meta property="og:description" content="حلول برمجية مبتكرة ومتطورة بأعلى معايير الجودة والاحترافية" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630" />
+    <meta property="og:url" content="https://alqudimitech.com" />
+    <meta property="og:site_name" content="Alqudimi Technology" />
+    
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Alqudimi Technology - عبدالعزيز محمد القديمي" />
+    <meta name="twitter:description" content="مطور برمجيات محترف متخصص في تطوير المواقع وتطبيقات الموبايل والذكاء الاصطناعي" />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=630" />
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "عبدالعزيز محمد القديمي",
+      "alternateName": "Abdulaziz Mohammed Alqudimi",
+      "jobTitle": "مطور برمجيات محترف",
+      "description": "مطور برمجيات محترف متخصص في جميع مجالات البرمجة والتطوير",
+      "url": "https://alqudimitech.com",
+      "sameAs": [
+        "https://linkedin.com/in/alqudimi",
+        "https://github.com/alqudimi"
+      ],
+      "knowsAbout": ["Web Development", "Mobile Development", "AI", "Database Management"],
+      "email": "contact@alqudimitech.com",
+      "telephone": "+967 777 123 456",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "صنعاء",
+        "addressCountry": "Yemen"
+      }
+    }
+    </script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Tajawal:wght@200;300;400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+      .loading-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, hsl(221.2, 83.2%, 53.3%), hsl(142.1, 76.2%, 36.3%));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        opacity: 1;
+        transition: opacity 0.5s ease;
+      }
+      
+      .loading-screen.hide {
+        opacity: 0;
+        pointer-events: none;
+      }
+      
+      .loader {
+        width: 50px;
+        height: 50px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-top: 3px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="loading-screen" id="loadingScreen">
+      <div class="loader"></div>
+    </div>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    
+    <script>
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          const loadingScreen = document.getElementById('loadingScreen');
+          if (loadingScreen) {
+            loadingScreen.classList.add('hide');
+          }
+        }, 1000);
+      });
+    </script>
+  </body>
+</html>
