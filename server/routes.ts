@@ -1,6 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
+import { storage, initializeDatabase, getDatabaseStats, checkDatabaseConnection } from "./storage";
 import { 
   insertServiceSchema, insertProjectSchema, insertCvDataSchema, 
   insertContactInfoSchema, insertContactMessageSchema, insertSiteSettingSchema,
@@ -111,9 +111,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const validatedData = insertContactMessageSchema.parse(req.body);
       const message = await storage.createContactMessage(validatedData);
-      
-      // TODO: Send email notification using nodemailer
-      // This would require setting up SMTP credentials
       
       res.status(201).json({ 
         message: "Message sent successfully",
@@ -432,7 +429,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Blog post not found" });
       }
       
-      // Increment view count
       await storage.incrementBlogPostViews(post.id);
       
       res.json(post);
@@ -461,13 +457,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-
   // Newsletter Subscription
   app.post("/api/newsletter/subscribe", async (req, res) => {
     try {
       const parsed = insertNewsletterSubscriberSchema.parse(req.body);
       
-      // Check if already subscribed
       const existing = await storage.getNewsletterSubscriberByEmail(parsed.email);
       if (existing) {
         return res.status(400).json({ message: "Email already subscribed" });
@@ -605,7 +599,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const searchTerm = q.toLowerCase();
       const results: any[] = [];
       
-      // Search blog posts
       if (!type || type === 'blog') {
         const posts = await storage.getPublishedBlogPosts();
         posts.forEach(post => {
@@ -635,7 +628,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
       
-      // Search projects
       if (!type || type === 'project') {
         const projects = await storage.getAllProjects();
         projects.filter(project => project.isActive).forEach(project => {
@@ -661,7 +653,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
       
-      // Search testimonials
       if (!type || type === 'testimonial') {
         const testimonials = await storage.getPublishedTestimonials();
         testimonials.forEach(testimonial => {
@@ -689,14 +680,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
       
-      // Filter by category if specified
       const filteredResults = category && category !== 'all' 
         ? results.filter(result => 
             result.category === category || result.categoryEn === category
           )
         : results;
       
-      // Limit results
       const limitedResults = filteredResults.slice(0, parseInt(limit as string));
       
       res.json(limitedResults);
@@ -723,71 +712,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to fetch analytics" });
     }
   });
-  app.post("/api/admin/init-db", async (req, res) => {
-  try {
-    await initializeDatabase();
-    const stats = await getDatabaseStats();
-    
-    res.json({
-      message: "Database initialized successfully",
-      stats
-    });
-  } catch (error) {
-    res.status(500).json({ 
-      message: "Failed to initialize database",
-      error: error.message 
-    });
-  }
-});
 
-app.get("/api/admin/db-stats", authenticateToken, async (req, res) => {
-  try {
-    const stats = await getDatabaseStats();
-    res.json(stats);
-  } catch (error) {
-    res.status(500).json({ 
-      message: "Failed to fetch database stats",
-      error: error.message 
-    });
-  }
-});
-
-app.get("/api/health", async (req, res) => {
-  try {
-    const dbConnected = await checkDatabaseConnection();
-    res.json({
-      status: "healthy",
-      database: dbConnected ? "connected" : "disconnected",
-      timestamp: new Date().toISOString()
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: "unhealthy",
-      database: "disconnected",
-      error: error.message
-    });
-  }
-});
-
-
-  // Initialize admin user with custom or default credentials
+  // Initialize admin user
   app.post("/api/admin/init", async (req, res) => {
     try {
-      // Get custom credentials from request body or use defaults
       const { username = "admin", password = "admin123", email = "admin@alqudimitech.com" } = req.body;
       
-      // Validate input
       if (!username || !password || !email) {
         return res.status(400).json({ message: "Username, password, and email are required" });
       }
       
-      // Check if admin user with this username already exists
       const existingUser = await storage.getAdminUserByUsername(username);
       if (existingUser) {
         return res.status(400).json({ message: `Admin user '${username}' already exists` });
       }
 
-      // Create admin user with provided or default credentials
       const hashedPassword = await bcrypt.hash(password, 10);
       const adminUser = await storage.createAdminUser({
         username,
@@ -805,8 +744,55 @@ app.get("/api/health", async (req, res) => {
     }
   });
 
+  // Database initialization endpoint
+  app.post("/api/admin/init-db", async (req, res) => {
+    try {
+      await initializeDatabase();
+      const stats = await getDatabaseStats();
+      
+      res.json({
+        message: "Database initialized successfully",
+        stats
+      });
+    } catch (error) {
+      res.status(500).json({ 
+        message: "Failed to initialize database",
+        error: error.message 
+      });
+    }
+  });
+
+  // Database stats endpoint
+  app.get("/api/admin/db-stats", authenticateToken, async (req, res) => {
+    try {
+      const stats = await getDatabaseStats();
+      res.json(stats);
+    } catch (error) {
+      res.status(500).json({ 
+        message: "Failed to fetch database stats",
+        error: error.message 
+      });
+    }
+  });
+
+  // Health check endpoint
+  app.get("/api/health", async (req, res) => {
+    try {
+      const dbConnected = await checkDatabaseConnection();
+      res.json({
+        status: "healthy",
+        database: dbConnected ? "connected" : "disconnected",
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      res.status(500).json({
+        status: "unhealthy",
+        database: "disconnected",
+        error: error.message
+      });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
-
-
