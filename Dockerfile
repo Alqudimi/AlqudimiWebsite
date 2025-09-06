@@ -1,24 +1,30 @@
-# Use Node.js 18 LTS as base image
-FROM node:18-alpine
-
-# Set working directory
+# مرحلة البناء
+FROM node:20-alpine AS build
 WORKDIR /app
 
-# Copy package files
+# نسخ ملفات البكج أولاً عشان الكاش
 COPY package*.json ./
+# إذا عندك pnpm-lock.yaml انسخه برضه
+COPY pnpm-lock.yaml ./ || true
 
-# Install dependencies
-RUN npm install
+RUN npm ci
 
-# Copy source code
+# نسخ بقية الملفات
 COPY . .
 
-# Build the application
-EXPOSE 5000
+# بناء المشروع
+RUN npm run build
 
-# Set environment variable
-ENV NODE_ENV=production
+# مرحلة الإنتاج مع nginx
+FROM nginx:stable-alpine AS production
 
-# Start the application
-CMD ["bash", "./start.sh"]
+# حذف الملفات الافتراضية
+RUN rm -rf /usr/share/nginx/html/*
 
+# نسخ ملفات البناء
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# فتح البورت
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
