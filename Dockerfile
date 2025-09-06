@@ -1,30 +1,27 @@
-# مرحلة البناء
-FROM node:20-alpine AS build
+
+# Stage 1: Build the client-side application
+FROM node:20-alpine AS client-builder
 WORKDIR /app
-
-# نسخ ملفات البكج
-COPY package*.json ./
+COPY client ./client
+COPY package.json vite.config.ts postcss.config.js tailwind.config.ts tsconfig.json components.json ./ 
 RUN npm install
-
-# نسخ بقية الملفات
-COPY . .
-
-# بناء الواجهة + السيرفر
 RUN npm run build
 
-
-# مرحلة التشغيل
-FROM node:20-alpine AS production
+# Stage 2: Build the server-side application
+FROM node:20-alpine AS server-builder
 WORKDIR /app
+COPY server ./server
+COPY shared ./shared
+COPY package.json tsconfig.json drizzle.config.ts ./ 
+RUN npm install
+RUN npm run build
 
-# نسخ ملفات dist من مرحلة البناء
-COPY --from=build /app/dist ./dist
-COPY package*.json ./
+# Stage 3: Setup Nginx and serve the application
+FROM nginx:alpine
+COPY --from=client-builder /app/dist /usr/share/nginx/html
+COPY --from=server-builder /app/dist /usr/src/app
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
 
-# تثبيت فقط dependencies الضرورية (بدون devDependencies)
-RUN npm install --omit=dev
 
-ENV NODE_ENV=production
-EXPOSE 5000
-
-CMD ["node", "dist/index.js"]
