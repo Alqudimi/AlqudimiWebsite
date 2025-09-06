@@ -8,20 +8,17 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci --only=production
+RUN npm install
 
 # Copy source code
 COPY . .
 
 # Build the application
-RUN npm run build
-
-# Expose port
 EXPOSE 5000
 
 # Set environment variable
 ENV NODE_ENV=production
 
 # Start the application
-CMD ["npm", "start"]
+CMD ["bash", "./start.sh"]
 
