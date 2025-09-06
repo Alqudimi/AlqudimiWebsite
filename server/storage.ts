@@ -547,3 +547,351 @@ export class DatabaseStorage implements IStorage {
 }
 
 export const storage = new DatabaseStorage();
+
+export async function initializeDatabase(): Promise<void> {
+  try {
+    console.log('🔄 Starting database initialization...');
+    
+    await createAdminUsersTable();
+    await createServicesTable();
+    await createProjectsTable();
+    await createCvDataTable();
+    await createContactInfoTable();
+    await createContactMessagesTable();
+    await createSiteSettingsTable();
+    await createBlogPostsTable();
+    await createTestimonialsTable();
+    await createNewsletterSubscribersTable();
+    await createAnalyticsTable();
+    
+    await createDefaultAdminUser();
+    await createDefaultSiteSettings();
+    
+    console.log('✅ Database initialization completed successfully');
+  } catch (error) {
+    console.error('❌ Database initialization failed:', error);
+    throw error;
+  }
+}
+
+async function tableExists(tableName: string): Promise<boolean> {
+  const result = await db.execute(sql`
+    SELECT EXISTS (
+      SELECT FROM information_schema.tables 
+      WHERE table_schema = 'public' 
+      AND table_name = ${tableName}
+    )
+  `);
+  return result.rows[0]?.exists || false;
+}
+
+async function createAdminUsersTable(): Promise<void> {
+  if (await tableExists('admin_users')) return;
+
+  await db.execute(sql`
+    CREATE TABLE admin_users (
+      id SERIAL PRIMARY KEY,
+      username VARCHAR(50) UNIQUE NOT NULL,
+      password VARCHAR(255) NOT NULL,
+      email VARCHAR(100) UNIQUE NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  console.log('✅ Created admin_users table');
+}
+
+async function createServicesTable(): Promise<void> {
+  if (await tableExists('services')) return;
+
+  await db.execute(sql`
+    CREATE TABLE services (
+      id SERIAL PRIMARY KEY,
+      title VARCHAR(100) NOT NULL,
+      title_en VARCHAR(100),
+      description TEXT,
+      description_en TEXT,
+      icon VARCHAR(50),
+      features TEXT[] DEFAULT '{}',
+      features_en TEXT[] DEFAULT '{}',
+      is_active BOOLEAN DEFAULT true,
+      "order" INTEGER DEFAULT 0,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  console.log('✅ Created services table');
+}
+
+async function createProjectsTable(): Promise<void> {
+  if (await tableExists('projects')) return;
+
+  await db.execute(sql`
+    CREATE TABLE projects (
+      id SERIAL PRIMARY KEY,
+      title VARCHAR(100) NOT NULL,
+      title_en VARCHAR(100),
+      description TEXT,
+      description_en TEXT,
+      short_description TEXT,
+      short_description_en TEXT,
+      category VARCHAR(50),
+      technologies TEXT[] DEFAULT '{}',
+      images TEXT[] DEFAULT '{}',
+      project_url VARCHAR(255),
+      github_url VARCHAR(255),
+      is_active BOOLEAN DEFAULT true,
+      is_featured BOOLEAN DEFAULT false,
+      "order" INTEGER DEFAULT 0,
+      start_date DATE,
+      end_date DATE,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  console.log('✅ Created projects table');
+}
+
+async function createCvDataTable(): Promise<void> {
+  if (await tableExists('cv_data')) return;
+
+  await db.execute(sql`
+    CREATE TABLE cv_data (
+      id SERIAL PRIMARY KEY,
+      type VARCHAR(50) NOT NULL,
+      title VARCHAR(100) NOT NULL,
+      title_en VARCHAR(100),
+      subtitle VARCHAR(100),
+      subtitle_en VARCHAR(100),
+      description TEXT,
+      description_en TEXT,
+      skills TEXT[] DEFAULT '{}',
+      start_date DATE,
+      end_date DATE,
+      "order" INTEGER DEFAULT 0,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  console.log('✅ Created cv_data table');
+}
+
+async function createContactInfoTable(): Promise<void> {
+  if (await tableExists('contact_info')) return;
+
+  await db.execute(sql`
+    CREATE TABLE contact_info (
+      id SERIAL PRIMARY KEY,
+      type VARCHAR(50) NOT NULL,
+      value VARCHAR(255) NOT NULL,
+      label VARCHAR(100),
+      label_en VARCHAR(100),
+      icon VARCHAR(50),
+      is_active BOOLEAN DEFAULT true,
+      "order" INTEGER DEFAULT 0,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  console.log('✅ Created contact_info table');
+}
+
+async function createContactMessagesTable(): Promise<void> {
+  if (await tableExists('contact_messages')) return;
+
+  await db.execute(sql`
+    CREATE TABLE contact_messages (
+      id SERIAL PRIMARY KEY,
+      name VARCHAR(100) NOT NULL,
+      email VARCHAR(100) NOT NULL,
+      subject VARCHAR(200),
+      message TEXT NOT NULL,
+      status VARCHAR(20) DEFAULT 'unread',
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  console.log('✅ Created contact_messages table');
+}
+
+async function createSiteSettingsTable(): Promise<void> {
+  if (await tableExists('site_settings')) return;
+
+  await db.execute(sql`
+    CREATE TABLE site_settings (
+      key VARCHAR(100) PRIMARY KEY,
+      value TEXT NOT NULL,
+      category VARCHAR(50),
+      description TEXT,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  console.log('✅ Created site_settings table');
+}
+
+async function createBlogPostsTable(): Promise<void> {
+  if (await tableExists('blog_posts')) return;
+
+  await db.execute(sql`
+    CREATE TABLE blog_posts (
+      id SERIAL PRIMARY KEY,
+      title VARCHAR(200) NOT NULL,
+      title_en VARCHAR(200),
+      slug VARCHAR(200) UNIQUE NOT NULL,
+      excerpt TEXT,
+      excerpt_en TEXT,
+      content TEXT,
+      content_en TEXT,
+      category VARCHAR(50),
+      category_en VARCHAR(50),
+      tags TEXT[] DEFAULT '{}',
+      tags_en TEXT[] DEFAULT '{}',
+      featured_image VARCHAR(255),
+      is_published BOOLEAN DEFAULT false,
+      is_featured BOOLEAN DEFAULT false,
+      view_count INTEGER DEFAULT 0,
+      published_at TIMESTAMP,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  console.log('✅ Created blog_posts table');
+}
+
+async function createTestimonialsTable(): Promise<void> {
+  if (await tableExists('testimonials')) return;
+
+  await db.execute(sql`
+    CREATE TABLE testimonials (
+      id SERIAL PRIMARY KEY,
+      client_name VARCHAR(100) NOT NULL,
+      client_name_en VARCHAR(100),
+      client_company VARCHAR(100),
+      client_company_en VARCHAR(100),
+      client_image VARCHAR(255),
+      testimonial TEXT NOT NULL,
+      testimonial_en TEXT,
+      rating INTEGER DEFAULT 5,
+      project_id INTEGER,
+      is_published BOOLEAN DEFAULT true,
+      is_featured BOOLEAN DEFAULT false,
+      "order" INTEGER DEFAULT 0,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  console.log('✅ Created testimonials table');
+}
+
+async function createNewsletterSubscribersTable(): Promise<void> {
+  if (await tableExists('newsletter_subscribers')) return;
+
+  await db.execute(sql`
+    CREATE TABLE newsletter_subscribers (
+      id SERIAL PRIMARY KEY,
+      email VARCHAR(100) UNIQUE NOT NULL,
+      name VARCHAR(100),
+      is_active BOOLEAN DEFAULT true,
+      subscribed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      unsubscribed_at TIMESTAMP
+    )
+  `);
+  console.log('✅ Created newsletter_subscribers table');
+}
+
+async function createAnalyticsTable(): Promise<void> {
+  if (await tableExists('analytics')) return;
+
+  await db.execute(sql`
+    CREATE TABLE analytics (
+      id SERIAL PRIMARY KEY,
+      type VARCHAR(50) NOT NULL,
+      path VARCHAR(255),
+      ip_address VARCHAR(45),
+      user_agent TEXT,
+      metadata JSONB DEFAULT '{}',
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+  console.log('✅ Created analytics table');
+}
+
+async function createDefaultAdminUser(): Promise<void> {
+  const existingAdmin = await storage.getAdminUserByUsername('admin');
+  if (existingAdmin) return;
+
+  const hashedPassword = await bcrypt.hash('admin123', 10);
+  await storage.createAdminUser({
+    username: 'admin',
+    password: hashedPassword,
+    email: 'admin@alqudimitech.com'
+  });
+  console.log('✅ Created default admin user');
+}
+
+async function createDefaultSiteSettings(): Promise<void> {
+  const existingSettings = await storage.getAllSiteSettings();
+  if (existingSettings.length > 0) return;
+
+  const defaultSettings = [
+    { key: 'site_title', value: 'Alqudimi Technology', category: 'general' },
+    { key: 'site_description', value: 'حلول تقنية متطورة', category: 'general' },
+    { key: 'site_language', value: 'ar', category: 'general' },
+    { key: 'admin_email', value: 'eng7mi@gmail.com', category: 'contact' },
+    { key: 'contact_email', value: 'contact@alqudimitech.com', category: 'contact' },
+    { key: 'phone_number', value: '+967777123456', category: 'contact' },
+    { key: 'address', value: 'صنعاء، اليمن', category: 'contact' }
+  ];
+
+  for (const setting of defaultSettings) {
+    await storage.createSiteSetting({
+      key: setting.key,
+      value: setting.value,
+      category: setting.category
+    });
+  }
+  console.log('✅ Created default site settings');
+}
+
+export async function checkDatabaseConnection(): Promise<boolean> {
+  try {
+    await db.execute(sql`SELECT 1`);
+    return true;
+  } catch (error) {
+    console.error('Database connection failed:', error);
+    return false;
+  }
+}
+
+export async function getDatabaseStats(): Promise<{
+  tableCount: number;
+  totalRecords: number;
+  tableStats: Array<{ table: string; count: number }>;
+}> {
+  const tables = [
+    'admin_users', 'services', 'projects', 'cv_data', 'contact_info',
+    'contact_messages', 'site_settings', 'blog_posts', 'testimonials',
+    'newsletter_subscribers', 'analytics'
+  ];
+
+  const tableStats = [];
+  let totalRecords = 0;
+
+  for (const table of tables) {
+    try {
+      const result = await db.execute(sql`SELECT COUNT(*) FROM ${sql.raw(table)}`);
+      const count = parseInt(result.rows[0]?.count || '0');
+      tableStats.push({ table, count });
+      totalRecords += count;
+    } catch (error) {
+      tableStats.push({ table, count: 0 });
+    }
+  }
+
+  return {
+    tableCount: tables.length,
+    totalRecords,
+    tableStats
+  };
+}
