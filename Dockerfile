@@ -2,7 +2,8 @@ FROM node:20-alpine AS build
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install
+# تثبيت كل شيء بما فيها الـ optional
+RUN npm install --include=optional
 
 COPY . .
 RUN npm run build
@@ -14,8 +15,8 @@ WORKDIR /app
 COPY --from=build /app/dist ./dist
 COPY package*.json ./
 
-# ثبّت كل الـ dependencies (مع dev) حتى يلاقي vite إذا بقي import
-RUN npm install --omit=optional
+# تثبيت فقط اللي يحتاجه السيرفر (بدون dev لكن مع optional)
+RUN npm install --omit=dev --include=optional
 
 ENV NODE_ENV=production
 EXPOSE 5000
