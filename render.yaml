@@ -1,8 +1,20 @@
 services:
   - type: web
-    name: alqudimi-website
-    env: docker
+    name: alqudimi-technology
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: alqudimi-db
+          property: connectionString
     plan: free
-    branch: main
-    repo: https://github.com/Alqudimi/AlqudimiWebsite
-    dockerfilePath: Dockerfile
+
+databases:
+  - name: alqudimi-db
+    databaseName: alqudimi_technology
+    user: alqudimi_user
+    plan: free
