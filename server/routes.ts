@@ -723,48 +723,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to fetch analytics" });
     }
   });
-
-  // Initialize admin user with custom or default credentials
-  app.post("/api/admin/init", async (req, res) => {
-    try {
-      // Get custom credentials from request body or use defaults
-      const { username = "admin", password = "admin123", email = "admin@alqudimitech.com" } = req.body;
-      
-      // Validate input
-      if (!username || !password || !email) {
-        return res.status(400).json({ message: "Username, password, and email are required" });
-      }
-      
-      // Check if admin user with this username already exists
-      const existingUser = await storage.getAdminUserByUsername(username);
-      if (existingUser) {
-        return res.status(400).json({ message: `Admin user '${username}' already exists` });
-      }
-
-      // Create admin user with provided or default credentials
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const adminUser = await storage.createAdminUser({
-        username,
-        password: hashedPassword,
-        email
-      });
-
-      res.json({ 
-        message: "Admin user created successfully",
-        username: adminUser.username,
-        email: adminUser.email 
-      });
-    } catch (error) {
-      res.status(500).json({ message: "Failed to initialize admin user" });
-    }
-  });
-
-  const httpServer = createServer(app);
-  return httpServer;
-}
-
-
-app.post("/api/admin/init-db", async (req, res) => {
+  app.post("/api/admin/init-db", async (req, res) => {
   try {
     await initializeDatabase();
     const stats = await getDatabaseStats();
@@ -809,3 +768,45 @@ app.get("/api/health", async (req, res) => {
     });
   }
 });
+
+
+  // Initialize admin user with custom or default credentials
+  app.post("/api/admin/init", async (req, res) => {
+    try {
+      // Get custom credentials from request body or use defaults
+      const { username = "admin", password = "admin123", email = "admin@alqudimitech.com" } = req.body;
+      
+      // Validate input
+      if (!username || !password || !email) {
+        return res.status(400).json({ message: "Username, password, and email are required" });
+      }
+      
+      // Check if admin user with this username already exists
+      const existingUser = await storage.getAdminUserByUsername(username);
+      if (existingUser) {
+        return res.status(400).json({ message: `Admin user '${username}' already exists` });
+      }
+
+      // Create admin user with provided or default credentials
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const adminUser = await storage.createAdminUser({
+        username,
+        password: hashedPassword,
+        email
+      });
+
+      res.json({ 
+        message: "Admin user created successfully",
+        username: adminUser.username,
+        email: adminUser.email 
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to initialize admin user" });
+    }
+  });
+
+  const httpServer = createServer(app);
+  return httpServer;
+}
+
+
