@@ -27,8 +27,12 @@ export default function Footer() {
           {/* Company Info */}
           <div className="md:col-span-2">
             <div className="flex items-center space-x-3 rtl:space-x-reverse mb-4">
-              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                <i className="fas fa-code text-primary-foreground text-lg"></i>
+              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center p-1">
+                <img 
+                  src="/attached_assets/alqudimi-logo.png" 
+                  alt="Alqudimi Technology Logo" 
+                  className="w-full h-full object-contain" 
+                />
               </div>
               <div>
                 <h3 className="text-xl font-bold gradient-text">Alqudimi Technology</h3>
@@ -51,7 +55,9 @@ export default function Footer() {
                 <i className="fab fa-instagram text-accent-foreground"></i>
               </a>
               <a
-                href="#"
+                href="https://www.linkedin.com/in/abdulaziz-alqudimi-09020037a?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center hover:scale-110 transition-transform"
                 onMouseEnter={playHoverSound}
                 data-testid="social-linkedin"
@@ -59,7 +65,9 @@ export default function Footer() {
                 <i className="fab fa-linkedin text-accent-foreground"></i>
               </a>
               <a
-                href="#"
+                href="https://github.com/Alqudimi"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center hover:scale-110 transition-transform"
                 onMouseEnter={playHoverSound}
                 data-testid="social-github"

@@ -52,8 +52,12 @@ export default function Header() {
           <div className="flex items-center justify-between h-16">
             {/* Logo and Brand */}
             <div className="flex items-center space-x-3 rtl:space-x-reverse">
-              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                <i className="fas fa-code text-primary-foreground text-lg"></i>
+              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center p-1">
+                <img 
+                  src="/attached_assets/alqudimi-logo.png" 
+                  alt="Alqudimi Technology Logo" 
+                  className="w-full h-full object-contain" 
+                />
               </div>
               <div className="hidden sm:block">
                 <h1 className="text-xl font-bold gradient-text">Alqudimi Technology</h1>

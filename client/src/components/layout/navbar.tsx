@@ -45,8 +45,12 @@ export default function Navbar() {
           {/* Logo */}
           <Link to="/" onClick={playClickSound}>
             <div className="flex items-center gap-3 hover:scale-105 transition-transform duration-300">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
-                <i className="fas fa-laptop-code text-white text-lg"></i>
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center p-1">
+                <img 
+                  src="/attached_assets/alqudimi-logo.png" 
+                  alt="Alqudimi Technology Logo" 
+                  className="w-full h-full object-contain" 
+                />
               </div>
               <div className="hidden sm:block">
                 <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
@@ -134,8 +138,12 @@ export default function Navbar() {
                   {/* Mobile Menu Header */}
                   <div className="p-6 border-b border-slate-200 dark:border-slate-700">
                     <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
-                        <i className="fas fa-laptop-code text-white text-xl"></i>
+                      <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center p-1">
+                        <img 
+                          src="/attached_assets/alqudimi-logo.png" 
+                          alt="Alqudimi Technology Logo" 
+                          className="w-full h-full object-contain" 
+                        />
                       </div>
                       <div>
                         <h2 className="text-lg font-bold text-slate-800 dark:text-white">

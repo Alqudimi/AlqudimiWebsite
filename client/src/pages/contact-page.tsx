@@ -52,7 +52,7 @@ export default function ContactPage() {
   });
 
   const sendMessageMutation = useMutation({
-    mutationFn: (data: MessageForm) => apiRequest("/api/messages", {
+    mutationFn: (data: MessageForm) => apiRequest("/api/contact", {
       method: "POST",
       body: JSON.stringify(data)
     }),
@@ -62,7 +62,7 @@ export default function ContactPage() {
         description: "شكراً لك! سنتواصل معك قريباً",
       });
       form.reset();
-      queryClient.invalidateQueries({ queryKey: ["/api/messages"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/contact"] });
     },
     onError: () => {
       toast({

@@ -603,7 +603,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       const searchTerm = q.toLowerCase();
-      const results = [];
+      const results: any[] = [];
       
       // Search blog posts
       if (!type || type === 'blog') {
