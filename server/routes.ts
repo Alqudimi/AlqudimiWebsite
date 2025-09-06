@@ -762,3 +762,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
   return httpServer;
 }
+
+
+app.post("/api/admin/init-db", async (req, res) => {
+  try {
+    await initializeDatabase();
+    const stats = await getDatabaseStats();
+    
+    res.json({
+      message: "Database initialized successfully",
+      stats
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      message: "Failed to initialize database",
+      error: error.message 
+    });
+  }
+});
+
+app.get("/api/admin/db-stats", authenticateToken, async (req, res) => {
+  try {
+    const stats = await getDatabaseStats();
+    res.json(stats);
+  } catch (error) {
+    res.status(500).json({ 
+      message: "Failed to fetch database stats",
+      error: error.message 
+    });
+  }
+});
+
+app.get("/api/health", async (req, res) => {
+  try {
+    const dbConnected = await checkDatabaseConnection();
+    res.json({
+      status: "healthy",
+      database: dbConnected ? "connected" : "disconnected",
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: "unhealthy",
+      database: "disconnected",
+      error: error.message
+    });
+  }
+});
