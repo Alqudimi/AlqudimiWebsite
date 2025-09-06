@@ -1,12 +1,13 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
-import { initializeDatabase } from "./storage"; // ✅ أضف هذا الاستيراد
+import { initializeDatabase } from "./storage";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Middleware for logging API requests
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
@@ -37,45 +38,98 @@ app.use((req, res, next) => {
   next();
 });
 
+// Health check endpoint
+app.get("/health", (req, res) => {
+  res.status(200).json({ 
+    status: "healthy", 
+    timestamp: new Date().toISOString(),
+    service: "Alqudimi Technology API"
+  });
+});
+
+// Main server initialization
 (async () => {
   try {
-    // ✅ تهيئة قاعدة البيانات أولاً
+    // Initialize database first
+    log("🔄 Initializing database...");
     await initializeDatabase();
     log("✅ Database initialized successfully");
 
+    // Register all API routes
     const server = await registerRoutes(app);
 
+    // Global error handling middleware
     app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
       const status = err.status || err.statusCode || 500;
       const message = err.message || "Internal Server Error";
 
-      res.status(status).json({ message });
-      throw err;
+      console.error('❌ Server error:', err);
+      res.status(status).json({ 
+        message,
+        ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+      });
     });
 
-    // importantly only setup vite in development and after
-    // setting up all the other routes so the catch-all route
-    // doesn't interfere with the other routes
+    // Handle 404 routes
+    app.use((_req: Request, res: Response) => {
+      res.status(404).json({ 
+        message: "Endpoint not found",
+        documentation: "Check /api endpoints for available routes"
+      });
+    });
+
+    // Setup Vite in development or serve static files in production
     if (app.get("env") === "development") {
+      log("🚀 Starting in development mode with Vite...");
       await setupVite(app, server);
     } else {
+      log("🏗️  Serving static files in production...");
       serveStatic(app);
     }
 
-    // ALWAYS serve the app on the port specified in the environment variable PORT
-    // Other ports are firewalled. Default to 5000 if not specified.
-    // this serves both the API and the client.
-    // It is the only port that is not firewalled.
+    // Get port from environment variable or default to 5000 for Render
     const port = parseInt(process.env.PORT || '5000', 10);
+    
+    // Start the server
     server.listen({
       port,
       host: "0.0.0.0",
       reusePort: true,
     }, () => {
-      log(`serving on port ${port}`);
+      log(`🎉 Server successfully started on port ${port}`);
+      log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
+      log(`📊 API endpoints available at: http://localhost:${port}/api`);
+      log(`❤️  Health check: http://localhost:${port}/health`);
+      
+      // Also log to console for Render logs
+      console.log(`✅ Server is listening on port ${port}`);
+      console.log(`🚀 Alqudimi Technology API is running!`);
     });
+
   } catch (error) {
     console.error('❌ Failed to start server:', error);
     process.exit(1);
   }
 })();
+
+// Graceful shutdown handling
+process.on('SIGINT', () => {
+  console.log('\n🛑 Received SIGINT. Shutting down gracefully...');
+  process.exit(0);
+});
+
+process.on('SIGTERM', () => {
+  console.log('\n🛑 Received SIGTERM. Shutting down gracefully...');
+  process.exit(0);
+});
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (error) => {
+  console.error('❌ Uncaught Exception:', error);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
+  process.exit(1);
+});
