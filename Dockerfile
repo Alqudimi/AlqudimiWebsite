@@ -4,8 +4,6 @@ WORKDIR /app
 
 # نسخ ملفات البكج أولاً عشان الكاش
 COPY package*.json ./
-# إذا عندك pnpm-lock.yaml انسخه برضه
-COPY pnpm-lock.yaml ./ || true
 
 RUN npm ci
 
