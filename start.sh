@@ -1,15 +1,11 @@
 #!/bin/bash
 
-# Exit immediately if a command exits with a non-zero status.
-set -e
-
-echo "Installing dependencies..."
+# Install dependencies
 npm install
 
-echo "Building the application..."
+# Build the application
 npm run build
 
-echo "Starting the application..."
+# Start the application
 npm start
-
 
