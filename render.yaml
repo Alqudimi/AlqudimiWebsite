@@ -1,20 +1,15 @@
 services:
   - type: web
     name: alqudimi-technology
-    env: node
+    env: Node
     buildCommand: npm install && npm run build
     startCommand: npm start
+    plan: starter
     envVars:
       - key: NODE_ENV
         value: production
-      - key: DATABASE_URL
-        fromDatabase:
-          name: alqudimi-db
-          property: connectionString
-    plan: free
+      # Add other environment variables here, e.g., DATABASE_URL
+      # - key: DATABASE_URL
+      #   value: your_database_connection_string
 
-databases:
-  - name: alqudimi-db
-    databaseName: alqudimi_technology
-    user: alqudimi_user
-    plan: free
+
