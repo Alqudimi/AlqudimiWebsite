@@ -2,25 +2,29 @@
 FROM node:20-alpine AS build
 WORKDIR /app
 
+# نسخ ملفات البكج
 COPY package*.json ./
 RUN npm install
 
+# نسخ بقية الملفات
 COPY . .
+
+# بناء الواجهة + السيرفر
 RUN npm run build
 
 
-# مرحلة الإنتاج
-FROM nginx:stable-alpine
+# مرحلة التشغيل
+FROM node:20-alpine AS production
+WORKDIR /app
 
-# مسح محتوى html الافتراضي
-RUN rm -rf /usr/share/nginx/html/*
+# نسخ ملفات dist من مرحلة البناء
+COPY --from=build /app/dist ./dist
+COPY package*.json ./
 
-# نسخ ناتج البناء
-COPY --from=build /app/dist /usr/share/nginx/html
+# تثبيت فقط dependencies الضرورية (بدون devDependencies)
+RUN npm install --omit=dev
 
-# نسخ ملف إعدادات nginx
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+ENV NODE_ENV=production
+EXPOSE 5000
 
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["node", "dist/index.js"]
