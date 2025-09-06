@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useTheme } from "@/hooks/use-theme";
 import { useSound } from "@/hooks/use-sound";
 import { Moon, Sun, Volume2, VolumeX, Menu, X } from "lucide-react";
+// Logo will be handled directly in the component
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -51,17 +52,39 @@ export default function Header() {
         <div className="container mx-auto px-4 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo and Brand */}
-            <div className="flex items-center space-x-3 rtl:space-x-reverse">
-              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center p-1">
-                <img 
-                  src="/attached_assets/alqudimi-logo.png" 
-                  alt="Alqudimi Technology Logo" 
-                  className="w-full h-full object-contain" 
-                />
+            <div className="flex items-center space-x-4 rtl:space-x-reverse z-50">
+              <div className="relative group cursor-pointer">
+                {/* Glow Effect Background */}
+                <div className="absolute -inset-2 bg-gradient-to-r from-blue-400 via-purple-500 to-cyan-400 rounded-2xl opacity-20 blur-lg animate-pulse"></div>
+                
+                {/* Main Logo Container */}
+                <div className="relative w-14 h-14 bg-gradient-to-br from-blue-600 via-purple-600 to-cyan-500 rounded-xl flex items-center justify-center shadow-2xl transition-all duration-500 group-hover:shadow-cyan-500/50 group-hover:scale-110 group-hover:rotate-6 border border-white/20">
+                  {/* Logo Text */}
+                  <div className="relative z-10">
+                    <span className="text-white font-black text-2xl tracking-tighter drop-shadow-lg transform transition-all duration-300 group-hover:scale-125">
+                      AT
+                    </span>
+                    {/* Shadow Effect */}
+                    <div className="absolute inset-0 text-white/20 font-black text-2xl tracking-tighter transform translate-x-1 translate-y-1 -z-10">
+                      AT
+                    </div>
+                  </div>
+                  
+                  {/* Inner Glow */}
+                  <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent rounded-xl"></div>
+                </div>
+                
+                {/* Hover Glow */}
+                <div className="absolute -inset-3 bg-gradient-to-r from-blue-400 via-purple-500 to-cyan-400 rounded-2xl opacity-0 group-hover:opacity-30 transition-opacity duration-500 blur-md"></div>
               </div>
+              
               <div className="hidden sm:block">
-                <h1 className="text-xl font-bold gradient-text">Alqudimi Technology</h1>
-                <p className="text-xs text-muted-foreground">تكنولوجيا القديمي</p>
+                <h1 className="text-2xl font-black bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-500 bg-clip-text text-transparent hover:from-cyan-500 hover:to-blue-600 transition-all duration-500 drop-shadow-sm">
+                  Alqudimi Technology
+                </h1>
+                <p className="text-sm text-muted-foreground/90 font-semibold tracking-wider">
+                  تكنولوجيا القديمي
+                </p>
               </div>
             </div>
 

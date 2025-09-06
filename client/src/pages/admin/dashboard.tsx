@@ -470,7 +470,7 @@ export default function AdminDashboard() {
                             {message.serviceType && (
                               <p><strong>نوع الخدمة:</strong> {message.serviceType}</p>
                             )}
-                            <p><strong>التاريخ:</strong> {new Date(message.createdAt).toLocaleString('ar')}</p>
+                            <p><strong>التاريخ:</strong> {message.createdAt ? new Date(message.createdAt).toLocaleString('ar') : 'غير محدد'}</p>
                           </div>
                           <div className="mt-3 p-3 bg-muted rounded-lg">
                             <p className="text-sm">{message.message}</p>

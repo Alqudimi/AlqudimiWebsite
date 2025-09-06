@@ -1,4 +1,5 @@
 import { useSound } from "@/hooks/use-sound";
+// Logo will be handled directly in the component
 
 export default function Footer() {
   const { playHoverSound } = useSound();
@@ -26,17 +27,27 @@ export default function Footer() {
         <div className="grid md:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="md:col-span-2">
-            <div className="flex items-center space-x-3 rtl:space-x-reverse mb-4">
-              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center p-1">
-                <img 
-                  src="/attached_assets/alqudimi-logo.png" 
-                  alt="Alqudimi Technology Logo" 
-                  className="w-full h-full object-contain" 
-                />
+            <div className="flex items-center space-x-4 rtl:space-x-reverse mb-6">
+              <div className="relative group">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-600 via-purple-600 to-cyan-500 rounded-2xl flex items-center justify-center shadow-lg transition-all duration-300 group-hover:shadow-xl group-hover:scale-105">
+                  <div className="relative">
+                    <span className="text-white font-black text-2xl tracking-tighter transform transition-all duration-300 group-hover:scale-110">
+                      AT
+                    </span>
+                    <div className="absolute inset-0 text-white/30 font-black text-2xl tracking-tighter transform translate-x-0.5 translate-y-0.5">
+                      AT
+                    </div>
+                  </div>
+                </div>
+                <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-400 rounded-2xl opacity-20 group-hover:opacity-50 transition-opacity duration-300 blur-sm"></div>
               </div>
               <div>
-                <h3 className="text-xl font-bold gradient-text">Alqudimi Technology</h3>
-                <p className="text-xs text-muted-foreground">تكنولوجيا القديمي</p>
+                <h3 className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-1">
+                  Alqudimi Technology
+                </h3>
+                <p className="text-sm text-muted-foreground/90 font-medium tracking-wide">
+                  تكنولوجيا القديمي
+                </p>
               </div>
             </div>
             <p className="text-muted-foreground mb-4 leading-relaxed">
