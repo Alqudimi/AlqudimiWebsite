@@ -1,24 +1,30 @@
-# Use Node.js 18 LTS as base image
-FROM node:18-alpine
-
-# Set working directory
+# مرحلة البناء
+FROM node:20-alpine AS build
 WORKDIR /app
 
-# Copy package files
+# نسخ ملفات البكج أولاً
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
 
-# Copy source code
+# نسخ باقي الملفات
 COPY . .
 
-# Build the application
-EXPOSE 5000
+# بناء المشروع (يولد مجلد dist/)
+RUN npm run build
 
-# Set environment variable
-ENV NODE_ENV=production
 
-# Start the application
-CMD ["bash", "./start.sh"]
+# مرحلة الإنتاج مع nginx
+FROM nginx:stable-alpine AS production
 
+# مسح المحتوى الافتراضي
+RUN rm -rf /usr/share/nginx/html/*
+
+# نسخ ملفات البناء إلى nginx
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# (اختياري) لو عندك SPA (React Router) أضف هذا الملف لإعادة التوجيه
+# COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

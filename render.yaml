@@ -1,15 +1,8 @@
 services:
   - type: web
-    name: alqudimi-technology
-    env: Node
-    buildCommand: npm install && npm run build
-    startCommand: npm start
-    plan: starter
-    envVars:
-      - key: NODE_ENV
-        value: production
-      # Add other environment variables here, e.g., DATABASE_URL
-      # - key: DATABASE_URL
-      #   value: your_database_connection_string
-
-
+    name: alqudimi-website
+    env: docker
+    plan: free
+    branch: main
+    repo: https://github.com/Alqudimi/AlqudimiWebsite
+    dockerfilePath: Dockerfile
