@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إنشاء حساب | نظام متقدم</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-light: #7c4dff;
+            --secondary-light: #ff6e6c;
+            --accent-light: #2ce0c8;
+            --background-light: #f8f9fa;
+            --text-light: #2d3748;
+            --card-light: #ffffff;
+            --input-light: #f1f3f4;
+            
+            --primary-dark: #9370ff;
+            --secondary-dark: #ff8c8a;
+            --accent-dark: #3af0da;
+            --background-dark: #1a202c;
+            --text-dark: #e2e8f0;
+            --card-dark: #2d3748;
+            --input-dark: #4a5568;
+            
+            --border-radius: 16px;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --box-shadow: 0 12px 36px rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(-45deg, #7c4dff, #ff6e6c, #2ce0c8);
+            background-size: 400% 400%;
+            animation: gradientBG 16s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            transition: var(--transition);
+        }
+
+        body.dark-mode {
+            background: linear-gradient(-45deg, #1a202c, #2d3748, #4a5568);
+            background-size: 400% 400%;
+            animation: gradientBG 16s ease infinite;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(180deg);
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .theme-toggle i {
+            font-size: 24px;
+            color: var(--text-light);
+        }
+
+        .dark-mode .theme-toggle i {
+            color: var(--text-dark);
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(16px);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            width: 100%;
+            max-width: 500px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        .dark-mode .login-container {
+            background: rgba(45, 55, 72, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: -60%;
+            left: -60%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.01));
+            transform: rotate(25deg);
+            z-index: -1;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeIn 1.2s ease;
+        }
+
+        .logo i {
+            font-size: 46px;
+            color: white;
+            background: linear-gradient(45deg, var(--primary-light), var(--secondary-light));
+            width: 90px;
+            height: 90px;
+            line-height: 90px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+            display: inline-block;
+            box-shadow: 0 8px 24px rgba(124, 77, 255, 0.5);
+            transition: var(--transition);
+        }
+
+        .dark-mode .logo i {
+            background: linear-gradient(45deg, var(--primary-dark), var(--secondary-dark));
+            box-shadow: 0 8px 24px rgba(147, 112, 255, 0.5);
+        }
+
+        .logo h1 {
+            color: white;
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .dark-mode .logo h1 {
+            color: var(--text-dark);
+        }
+
+        .login-form {
+            animation: slideUp 1.4s ease;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-row .input-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 18px 55px 18px 20px;
+            border: none;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: var(--border-radius);
+            font-size: 17px;
+            color: #2d3748;
+            transition: var(--transition);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            appearance: none;
+        }
+
+        .dark-mode .input-group input, .dark-mode .input-group select {
+            background: var(--input-dark);
+            color: var(--text-dark);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            box-shadow: 0 8px 24px rgba(124, 77, 255, 0.4);
+            transform: translateY(-3px);
+        }
+
+        .input-group input::placeholder, .input-group select::placeholder {
+            color: #a0aec0;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-light);
+            font-size: 20px;
+            transition: var(--transition);
+            pointer-events: none;
+        }
+
+        .dark-mode .input-group i {
+            color: var(--primary-dark);
+        }
+
+        .input-group input:focus + i, .input-group select:focus + i {
+            color: var(--secondary-light);
+            transform: translateY(-50%) scale(1.2);
+        }
+
+        .dark-mode .input-group input:focus + i, .dark-mode .input-group select:focus + i {
+            color: var(--secondary-dark);
+        }
+
+        .password-strength {
+            margin-top: 8px;
+            height: 6px;
+            border-radius: 3px;
+            background: #e2e8f0;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .dark-mode .password-strength {
+            background: #4a5568;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            width: 0%;
+            border-radius: 3px;
+            transition: var(--transition);
+        }
+
+        .password-requirements {
+            margin-top: 10px;
+            font-size: 13px;
+            color: white;
+            transition: var(--transition);
+        }
+
+        .dark-mode .password-requirements {
+            color: var(--text-dark);
+        }
+
+        .password-requirements ul {
+            list-style: none;
+            padding-right: 15px;
+        }
+
+        .password-requirements li {
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .password-requirements li i {
+            margin-left: 8px;
+            font-size: 12px;
+        }
+
+        .requirement-met {
+            color: #48bb78;
+        }
+
+        .requirement-not-met {
+            color: #f56565;
+        }
+
+        .terms-container {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 25px;
+            color: white;
+            font-size: 15px;
+        }
+
+        .dark-mode .terms-container {
+            color: var(--text-dark);
+        }
+
+        .terms-container input {
+            margin-left: 10px;
+            margin-top: 4px;
+            accent-color: var(--primary-light);
+            cursor: pointer;
+        }
+
+        .dark-mode .terms-container input {
+            accent-color: var(--primary-dark);
+        }
+
+        .terms-container a {
+            color: var(--accent-light);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .dark-mode .terms-container a {
+            color: var(--accent-dark);
+        }
+
+        .terms-container a:hover {
+            text-decoration: underline;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            background: linear-gradient(45deg, var(--primary-light), var(--secondary-light));
+            border-radius: var(--border-radius);
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 8px 24px rgba(124, 77, 255, 0.4);
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dark-mode .login-btn {
+            background: linear-gradient(45deg, var(--primary-dark), var(--secondary-dark));
+            box-shadow: 0 8px 24px rgba(147, 112, 255, 0.4);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(124, 77, 255, 0.6);
+        }
+
+        .dark-mode .login-btn:hover {
+            box-shadow: 0 12px 30px rgba(147, 112, 255, 0.6);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .login-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: 0.6s;
+        }
+
+        .login-btn:hover::before {
+            left: 100%;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 30px;
+            color: white;
+            font-size: 16px;
+        }
+
+        .dark-mode .login-link {
+            color: var(--text-dark);
+        }
+
+        .login-link a {
+            color: var(--accent-light);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .dark-mode .login-link a {
+            color: var(--accent-dark);
+        }
+
+        .login-link a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            right: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-light);
+            transition: var(--transition);
+        }
+
+        .dark-mode .login-link a::after {
+            background: var(--accent-dark);
+        }
+
+        .login-link a:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        .floating-icons div {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 20%;
+            animation: float 18s linear infinite;
+            bottom: -60px;
+            z-index: -1;
+        }
+
+        .dark-mode .floating-icons div {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0.7; }
+            50% { transform: translateY(-400px) rotate(180deg); opacity: 0.4; }
+            100% { transform: translateY(-800px) rotate(360deg); opacity: 0; }
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                padding: 30px;
+                max-width: 90%;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .logo i {
+                width: 80px;
+                height: 80px;
+                line-height: 80px;
+                font-size: 40px;
+            }
+            
+            .logo h1 {
+                font-size: 28px;
+            }
+            
+            .input-group input, .input-group select {
+                padding: 16px 50px 16px 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 24px;
+            }
+            
+            .logo i {
+                width: 70px;
+                height: 70px;
+                line-height: 70px;
+                font-size: 36px;
+            }
+            
+            .logo h1 {
+                font-size: 24px;
+            }
+            
+            .input-group input, .input-group select {
+                padding: 14px 45px 14px 16px;
+                font-size: 16px;
+            }
+            
+            .login-btn {
+                padding: 16px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+    </div>
+
+    <div class="floating-icons">
+        <div style="left: 10%; animation-delay: 0s; animation-duration: 20s;"></div>
+        <div style="left: 20%; animation-delay: 2s; animation-duration: 22s;"></div>
+        <div style="left: 30%; animation-delay: 4s; animation-duration: 18s;"></div>
+        <div style="left: 40%; animation-delay: 6s; animation-duration: 24s;"></div>
+        <div style="left: 50%; animation-delay: 8s; animation-duration: 20s;"></div>
+        <div style="left: 60%; animation-delay: 10s; animation-duration: 22s;"></div>
+        <div style="left: 70%; animation-delay: 12s; animation-duration: 19s;"></div>
+        <div style="left: 80%; animation-delay: 14s; animation-duration: 21s;"></div>
+        <div style="left: 90%; animation-delay: 16s; animation-duration: 23s;"></div>
+    </div>
+
+    <div class="login-container">
+        <div class="logo">
+            <i class="fas fa-user-plus"></i>
+            <h1>إنشاء حساب جديد</h1>
+        </div>
+
+        <form class="login-form">
+            <div class="form-row">
+                <div class="input-group">
+                    <input type="text" placeholder="الاسم الأول" required>
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="input-group">
+                    <input type="text" placeholder="اسم العائلة" required>
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <input type="email" placeholder="البريد الإلكتروني" required>
+                <i class="fas fa-envelope"></i>
+            </div>
+
+            <div class="input-group">
+                <input type="password" id="password" placeholder="كلمة المرور" required>
+                <i class="fas fa-lock"></i>
+                <div class="password-strength">
+                    <div class="password-strength-bar" id="passwordStrengthBar"></div>
+                </div>
+                <div class="password-requirements">
+                    <ul>
+                        <li id="reqLength"><i class="fas fa-circle"></i> 8 أحرف على الأقل</li>
+                        <li id="reqUpperCase"><i class="fas fa-circle"></i> تحتوي على حرف كبير</li>
+                        <li id="reqNumber"><i class="fas fa-circle"></i> تحتوي على رقم</li>
+                        <li id="reqSpecial"><i class="fas fa-circle"></i> تحتوي على رمز خاص</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <input type="password" placeholder="تأكيد كلمة المرور" required>
+                <i class="fas fa-lock"></i>
+            </div>
+
+            <div class="input-group">
+                <select required>
+                    <option value="" disabled selected>اختر الدولة</option>
+                    <option value="sa">السعودية</option>
+                    <option value="eg">مصر</option>
+                    <option value="ae">الإمارات</option>
+                    <option value="qa">قطر</option>
+                    <option value="kw">الكويت</option>
+                    <option value="bh">البحرين</option>
+                    <option value="om">عمان</option>
+                    <option value="jo">الأردن</option>
+                    <option value="lb">لبنان</option>
+                </select>
+                <i class="fas fa-globe"></i>
+            </div>
+
+            <div class="terms-container">
+                <input type="checkbox" id="terms" required>
+                <label for="terms">أوافق على <a href="#">الشروط والأحكام</a> و <a href="#">سياسة الخصوصية</a></label>
+            </div>
+
+            <button type="submit" class="login-btn">إنشاء حساب</button>
+
+            <div class="login-link">
+                لديك حساب بالفعل؟ <a href="#">تسجيل الدخول</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('themeToggle');
+            const body = document.body;
+            const icon = themeToggle.querySelector('i');
+            
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                body.classList.add('dark-mode');
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            }
+            
+            themeToggle.addEventListener('click', function() {
+                body.classList.toggle('dark-mode');
+                
+                if (body.classList.contains('dark-mode')) {
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                    localStorage.setItem('darkMode', 'enabled');
+                } else {
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                    localStorage.setItem('darkMode', 'disabled');
+                }
+            });
+            
+            const passwordInput = document.getElementById('password');
+            const strengthBar = document.getElementById('passwordStrengthBar');
+            const reqLength = document.getElementById('reqLength');
+            const reqUpperCase = document.getElementById('reqUpperCase');
+            const reqNumber = document.getElementById('reqNumber');
+            const reqSpecial = document.getElementById('reqSpecial');
+            
+            passwordInput.addEventListener('input', function() {
+                const password = this.value;
+                let strength = 0;
+                
+                // تحقق من طول كلمة المرور
+                if (password.length >= 8) {
+                    strength += 25;
+                    reqLength.innerHTML = '<i class="fas fa-check requirement-met"></i> 8 أحرف على الأقل';
+                } else {
+                    reqLength.innerHTML = '<i class="fas fa-circle requirement-not-met"></i> 8 أحرف على الأقل';
+                }
+                
+                // تحقق من وجود حرف كبير
+                if (/[A-Z]/.test(password)) {
+                    strength += 25;
+                    reqUpperCase.innerHTML = '<i class="fas fa-check requirement-met"></i> تحتوي على حرف كبير';
+                } else {
+                    reqUpperCase.innerHTML = '<i class="fas fa-circle requirement-not-met"></i> تحتوي على حرف كبير';
+                }
+                
+                // تحقق من وجود رقم
+                if (/[0-9]/.test(password)) {
+                    strength += 25;
+                    reqNumber.innerHTML = '<i class="fas fa-check requirement-met"></i> تحتوي على رقم';
+                } else {
+                    reqNumber.innerHTML = '<i class="fas fa-circle requirement-not-met"></i> تحتوي على رقم';
+                }
+                
+                // تحقق من وجود رمز خاص
+                if (/[^A-Za-z0-9]/.test(password)) {
+                    strength += 25;
+                    reqSpecial.innerHTML = '<i class="fas fa-check requirement-met"></i> تحتوي على رمز خاص';
+                } else {
+                    reqSpecial.innerHTML = '<i class="fas fa-circle requirement-not-met"></i> تحتوي على رمز خاص';
+                }
+                
+                // تحديث شريط قوة كلمة المرور
+                strengthBar.style.width = strength + '%';
+                
+                // تغيير لون الشريط حسب القوة
+                if (strength < 50) {
+                    strengthBar.style.background = '#f56565';
+                } else if (strength < 100) {
+                    strengthBar.style.background = '#ecc94b';
+                } else {
+                    strengthBar.style.background = '#48bb78';
+                }
+            });
+            
+            const createAccountBtn = document.querySelector('.login-btn');
+            
+            createAccountBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري إنشاء الحساب...';
+                this.disabled = true;
+                
+                setTimeout(() => {
+                    this.innerHTML = 'تم إنشاء الحساب بنجاح!';
+                    this.style.background = 'linear-gradient(45deg, #2ce0c8, #2ce0c8)';
+                    
+                    if (body.classList.contains('dark-mode')) {
+                        this.style.background = 'linear-gradient(45deg, #3af0da, #3af0da)';
+                    }
+                    
+                    setTimeout(() => {
+                        this.innerHTML = 'إنشاء حساب';
+                        this.disabled = false;
+                        this.style.background = '';
+                        
+                        if (body.classList.contains('dark-mode')) {
+                            this.style.background = 'linear-gradient(45deg, var(--primary-dark), var(--secondary-dark))';
+                        } else {
+                            this.style.background = 'linear-gradient(45deg, var(--primary-light), var(--secondary-light))';
+                        }
+                    }, 2000);
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>
