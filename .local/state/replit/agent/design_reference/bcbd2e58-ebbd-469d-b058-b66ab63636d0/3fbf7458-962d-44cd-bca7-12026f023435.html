@@ -1,0 +1,1137 @@
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alqudimi Technology - تكنولوجيا القديمي</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                borderRadius: {
+                    lg: "var(--radius)",
+                    md: "calc(var(--radius) - 2px)",
+                    sm: "calc(var(--radius) - 4px)",
+                },
+                colors: {
+                    background: "var(--background)",
+                    foreground: "var(--foreground)",
+                    card: {
+                        DEFAULT: "var(--card)",
+                        foreground: "var(--card-foreground)",
+                    },
+                    popover: {
+                        DEFAULT: "var(--popover)",
+                        foreground: "var(--popover-foreground)",
+                    },
+                    primary: {
+                        DEFAULT: "var(--primary)",
+                        foreground: "var(--primary-foreground)",
+                    },
+                    secondary: {
+                        DEFAULT: "var(--secondary)",
+                        foreground: "var(--secondary-foreground)",
+                    },
+                    muted: {
+                        DEFAULT: "var(--muted)",
+                        foreground: "var(--muted-foreground)",
+                    },
+                    accent: {
+                        DEFAULT: "var(--accent)",
+                        foreground: "var(--accent-foreground)",
+                    },
+                    destructive: {
+                        DEFAULT: "var(--destructive)",
+                        foreground: "var(--destructive-foreground)",
+                    },
+                    border: "var(--border)",
+                    input: "var(--input)",
+                    ring: "var(--ring)",
+                },
+                fontFamily: {
+                    sans: ["var(--font-sans)"],
+                }
+            },
+        }
+    };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --background: hsl(0 0% 100%);
+            --foreground: hsl(222.2 84% 4.9%);
+            --card: hsl(0 0% 100%);
+            --card-foreground: hsl(222.2 84% 4.9%);
+            --popover: hsl(0 0% 100%);
+            --popover-foreground: hsl(222.2 84% 4.9%);
+            --primary: hsl(221.2 83.2% 53.3%);
+            --primary-foreground: hsl(210 40% 98%);
+            --secondary: hsl(210 40% 96%);
+            --secondary-foreground: hsl(222.2 84% 4.9%);
+            --muted: hsl(210 40% 96%);
+            --muted-foreground: hsl(215.4 16.3% 46.9%);
+            --accent: hsl(210 40% 96%);
+            --accent-foreground: hsl(222.2 84% 4.9%);
+            --destructive: hsl(0 84.2% 60.2%);
+            --destructive-foreground: hsl(210 40% 98%);
+            --border: hsl(214.3 31.8% 91.4%);
+            --input: hsl(214.3 31.8% 91.4%);
+            --ring: hsl(221.2 83.2% 53.3%);
+            --radius: 0.75rem;
+            --font-sans: 'Inter', system-ui, sans-serif;
+        }
+        
+        [data-theme="dark"] {
+            --background: hsl(222.2 84% 4.9%);
+            --foreground: hsl(210 40% 98%);
+            --card: hsl(222.2 84% 4.9%);
+            --card-foreground: hsl(210 40% 98%);
+            --popover: hsl(222.2 84% 4.9%);
+            --popover-foreground: hsl(210 40% 98%);
+            --primary: hsl(217.2 91.2% 59.8%);
+            --primary-foreground: hsl(222.2 84% 4.9%);
+            --secondary: hsl(217.2 32.6% 17.5%);
+            --secondary-foreground: hsl(210 40% 98%);
+            --muted: hsl(217.2 32.6% 17.5%);
+            --muted-foreground: hsl(215 20.2% 65.1%);
+            --accent: hsl(217.2 32.6% 17.5%);
+            --accent-foreground: hsl(210 40% 98%);
+            --destructive: hsl(0 62.8% 30.6%);
+            --destructive-foreground: hsl(210 40% 98%);
+            --border: hsl(217.2 32.6% 17.5%);
+            --input: hsl(217.2 32.6% 17.5%);
+            --ring: hsl(224.3 76.3% 94.1%);
+        }
+        
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--background);
+            color: var(--foreground);
+            transition: all 0.3s ease;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, hsl(221.2 83.2% 53.3%), hsl(142.1 76.2% 36.3%));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .particle-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+        
+        .floating-animation {
+            animation: floating 6s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+        
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .navigation-blur {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.8);
+        }
+        
+        [data-theme="dark"] .navigation-blur {
+            background: rgba(15, 23, 42, 0.8);
+        }
+    </style>
+</head>
+<body class="min-h-screen transition-all duration-300">
+    <!-- @COMPONENT: NavigationHeader [sticky navigation with theme toggle] -->
+    <nav class="fixed top-0 left-0 right-0 z-50 navigation-blur border-b border-border">
+        <div class="container mx-auto px-4 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo and Brand -->
+                <div class="flex items-center space-x-3 rtl:space-x-reverse">
+                    <!-- Company logo placeholder - in production, use the provided logo image -->
+                    <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+                        <i class="fas fa-code text-primary-foreground text-lg"></i>
+                    </div>
+                    <div class="hidden sm:block">
+                        <h1 class="text-xl font-bold gradient-text">Alqudimi Technology</h1>
+                        <p class="text-xs text-muted-foreground">تكنولوجيا القديمي</p>
+                    </div>
+                </div>
+                
+                <!-- Navigation Menu -->
+                <div class="hidden md:flex items-center space-x-8 rtl:space-x-reverse">
+                    <a href="#home" class="text-foreground hover:text-primary transition-colors">الرئيسية</a>
+                    <a href="#services" class="text-foreground hover:text-primary transition-colors">الخدمات</a>
+                    <a href="#projects" class="text-foreground hover:text-primary transition-colors">المشاريع</a>
+                    <a href="#cv" class="text-foreground hover:text-primary transition-colors">السيرة الذاتية</a>
+                    <a href="#contact" class="text-foreground hover:text-primary transition-colors">التواصل</a>
+                </div>
+                
+                <!-- Theme and Sound Controls -->
+                <div class="flex items-center space-x-2 rtl:space-x-reverse">
+                    <button id="soundToggle" class="p-2 hover:bg-accent rounded-lg transition-colors">
+                        <i class="fas fa-volume-up text-muted-foreground"></i>
+                    </button>
+                    <button id="themeToggle" class="p-2 hover:bg-accent rounded-lg transition-colors">
+                        <i class="fas fa-moon text-muted-foreground"></i>
+                    </button>
+                    <button class="md:hidden p-2 hover:bg-accent rounded-lg transition-colors">
+                        <i class="fas fa-bars text-muted-foreground"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- @END_COMPONENT: NavigationHeader -->
+
+    <!-- @COMPONENT: HeroSection [main landing section with 3D effects] -->
+    <section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
+        <div class="particle-bg">
+            <!-- Animated background particles would be implemented with JavaScript/CSS animations -->
+            <div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5"></div>
+        </div>
+        
+        <div class="container mx-auto px-4 lg:px-8 text-center relative z-10">
+            <div class="max-w-4xl mx-auto scroll-reveal">
+                <!-- 3D Logo Placeholder -->
+                <div class="w-32 h-32 mx-auto mb-8 floating-animation">
+                    <div class="w-full h-full bg-gradient-to-br from-primary to-secondary rounded-2xl shadow-2xl flex items-center justify-center">
+                        <i class="fas fa-laptop-code text-white text-4xl"></i>
+                    </div>
+                </div>
+                
+                <h1 class="text-5xl md:text-7xl font-bold mb-6">
+                    <span class="gradient-text">عبدالعزيز محمد القديمي</span>
+                </h1>
+                
+                <p class="text-xl md:text-2xl text-muted-foreground mb-8 leading-relaxed">
+                    مطور برمجيات محترف متخصص في جميع مجالات البرمجة والتطوير
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+                    <button class="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 rounded-lg font-semibold transition-all hover:scale-105 shadow-lg">
+                        <i class="fas fa-rocket ml-2"></i>
+                        استكشف مشاريعي
+                    </button>
+                    <button class="border border-border hover:bg-accent text-foreground px-8 py-4 rounded-lg font-semibold transition-all hover:scale-105">
+                        <i class="fas fa-download ml-2"></i>
+                        تحميل السيرة الذاتية
+                    </button>
+                </div>
+                
+                <!-- Key Stats -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-2xl mx-auto">
+                    <div class="glass-card rounded-lg p-4 hover-lift">
+                        <div class="text-2xl font-bold gradient-text">50+</div>
+                        <div class="text-sm text-muted-foreground">مشروع مكتمل</div>
+                    </div>
+                    <div class="glass-card rounded-lg p-4 hover-lift">
+                        <div class="text-2xl font-bold gradient-text">5+</div>
+                        <div class="text-sm text-muted-foreground">سنوات خبرة</div>
+                    </div>
+                    <div class="glass-card rounded-lg p-4 hover-lift">
+                        <div class="text-2xl font-bold gradient-text">20+</div>
+                        <div class="text-sm text-muted-foreground">تقنية متقنة</div>
+                    </div>
+                    <div class="glass-card rounded-lg p-4 hover-lift">
+                        <div class="text-2xl font-bold gradient-text">100%</div>
+                        <div class="text-sm text-muted-foreground">رضا العملاء</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: HeroSection -->
+
+    <!-- @COMPONENT: ServicesSection [comprehensive services showcase] -->
+    <section id="services" class="py-20 bg-muted/30">
+        <div class="container mx-auto px-4 lg:px-8">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">خدماتنا البرمجية</h2>
+                <p class="text-xl text-muted-foreground max-w-3xl mx-auto">
+                    نقدم حلول برمجية شاملة تغطي جميع احتياجاتك التقنية بأعلى معايير الجودة والاحترافية
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Web Development Service -->
+                <div class="bg-card border border-border rounded-xl p-8 hover-lift scroll-reveal glass-card">
+                    <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-globe text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">تطوير المواقع الإلكترونية</h3>
+                    <p class="text-muted-foreground mb-6">
+                        تطوير مواقع ويب متجاوبة وسريعة باستخدام أحدث التقنيات مثل React، Vue.js، و Django
+                    </p>
+                    <ul class="space-y-2 text-sm">
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 ml-2"></i>مواقع تجارية</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 ml-2"></i>متاجر إلكترونية</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 ml-2"></i>مواقع إدارية</li>
+                    </ul>
+                </div>
+                
+                <!-- Mobile Development Service -->
+                <div class="bg-card border border-border rounded-xl p-8 hover-lift scroll-reveal glass-card">
+                    <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-mobile-alt text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">تطوير تطبيقات الموبايل</h3>
+                    <p class="text-muted-foreground mb-6">
+                        تطبيقات موبايل عالية الأداء لمنصات iOS و Android باستخدام React Native و Flutter
+                    </p>
+                    <ul class="space-y-2 text-sm">
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 ml-2"></i>تطبيقات iOS</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 ml-2"></i>تطبيقات Android</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 ml-2"></i>تطبيقات هجينة</li>
+                    </ul>
+                </div>
+                
+                <!-- AI Services -->
+                <div class="bg-card border border-border rounded-xl p-8 hover-lift scroll-reveal glass-card">
+                    <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-brain text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">الذكاء الاصطناعي</h3>
+                    <p class="text-muted-foreground mb-6">
+                        حلول ذكية متقدمة باستخدام تقنيات Machine Learning و Natural Language Processing
+                    </p>
+                    <ul class="space-y-2 text-sm">
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 ml-2"></i>تعلم الآلة</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 ml-2"></i>معالجة اللغات</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 ml-2"></i>رؤية الحاسوب</li>
+                    </ul>
+                </div>
+                
+                <!-- Database Services -->
+                <div class="bg-card border border-border rounded-xl p-8 hover-lift scroll-reveal glass-card">
+                    <div class="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-database text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">إدارة قواعد البيانات</h3>
+                    <p class="text-muted-foreground mb-6">
+                        تصميم وإدارة قواعد بيانات قوية وآمنة باستخدام PostgreSQL، MongoDB، و MySQL
+                    </p>
+                    <ul class="space-y-2 text-sm">
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 ml-2"></i>تصميم قواعد البيانات</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 ml-2"></i>تحسين الأداء</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 ml-2"></i>أمان البيانات</li>
+                    </ul>
+                </div>
+                
+                <!-- Cloud Services -->
+                <div class="bg-card border border-border rounded-xl p-8 hover-lift scroll-reveal glass-card">
+                    <div class="w-16 h-16 bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-cloud text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">الحوسبة السحابية</h3>
+                    <p class="text-muted-foreground mb-6">
+                        نشر وإدارة التطبيقات على الخدمات السحابية مثل AWS، Google Cloud، و Azure
+                    </p>
+                    <ul class="space-y-2 text-sm">
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 ml-2"></i>نشر التطبيقات</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 ml-2"></i>إدارة الخوادم</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 ml-2"></i>مراقبة الأداء</li>
+                    </ul>
+                </div>
+                
+                <!-- Cybersecurity Services -->
+                <div class="bg-card border border-border rounded-xl p-8 hover-lift scroll-reveal glass-card">
+                    <div class="w-16 h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-shield-alt text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">الأمن السيبراني</h3>
+                    <p class="text-muted-foreground mb-6">
+                        حماية شاملة للتطبيقات والبيانات مع تطبيق أفضل ممارسات الأمان والتشفير
+                    </p>
+                    <ul class="space-y-2 text-sm">
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 ml-2"></i>تدقيق الأمان</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 ml-2"></i>حماية البيانات</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 ml-2"></i>اختبار الاختراق</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: ServicesSection -->
+
+    <!-- @COMPONENT: ProjectsSection [portfolio showcase with filtering] -->
+    <section id="projects" class="py-20">
+        <div class="container mx-auto px-4 lg:px-8">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">معرض المشاريع</h2>
+                <p class="text-xl text-muted-foreground max-w-3xl mx-auto">
+                    استعرض مجموعة من أفضل المشاريع التي تم تطويرها بأحدث التقنيات ووفقاً لأعلى معايير الجودة
+                </p>
+            </div>
+            
+            <!-- Project Filter Tabs -->
+            <div class="flex flex-wrap justify-center gap-4 mb-12 scroll-reveal">
+                <button class="bg-primary text-primary-foreground px-6 py-3 rounded-lg font-semibold transition-all hover:scale-105">
+                    جميع المشاريع
+                </button>
+                <button class="bg-accent text-accent-foreground px-6 py-3 rounded-lg font-semibold transition-all hover:scale-105">
+                    مواقع الويب
+                </button>
+                <button class="bg-accent text-accent-foreground px-6 py-3 rounded-lg font-semibold transition-all hover:scale-105">
+                    تطبيقات الموبايل
+                </button>
+                <button class="bg-accent text-accent-foreground px-6 py-3 rounded-lg font-semibold transition-all hover:scale-105">
+                    الذكاء الاصطناعي
+                </button>
+            </div>
+            
+            <!-- Projects Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- @MAP: projects.map(project => ( -->
+                <!-- Project 1: E-commerce Platform -->
+                <div class="bg-card border border-border rounded-xl overflow-hidden hover-lift scroll-reveal glass-card">
+                    <!-- Modern e-commerce website interface with clean design -->
+                    <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600" 
+                         alt="E-commerce platform interface" 
+                         class="w-full h-48 object-cover" data-mock-image="true" />
+                    <div class="p-6">
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-sm">Django</span>
+                            <span class="bg-secondary/10 text-secondary px-3 py-1 rounded-full text-sm">React</span>
+                            <span class="bg-accent/10 text-accent-foreground px-3 py-1 rounded-full text-sm">PostgreSQL</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">منصة التجارة الإلكترونية</h3>
+                        <p class="text-muted-foreground mb-4">
+                            متجر إلكتروني متكامل مع نظام دفع آمن وإدارة المخزون وتحليلات المبيعات
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <button class="text-primary hover:underline">عرض التفاصيل</button>
+                            <div class="flex gap-2">
+                                <i class="fas fa-external-link-alt text-muted-foreground hover:text-primary cursor-pointer"></i>
+                                <i class="fab fa-github text-muted-foreground hover:text-primary cursor-pointer"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 2: AI ChatBot -->
+                <div class="bg-card border border-border rounded-xl overflow-hidden hover-lift scroll-reveal glass-card">
+                    <!-- AI chatbot interface with modern conversation UI -->
+                    <img src="https://images.unsplash.com/photo-1531746790731-6c087fecd65a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600" 
+                         alt="AI chatbot conversation interface" 
+                         class="w-full h-48 object-cover" data-mock-image="true" />
+                    <div class="p-6">
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-purple-100 text-purple-600 px-3 py-1 rounded-full text-sm">Python</span>
+                            <span class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm">NLP</span>
+                            <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm">TensorFlow</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">مساعد ذكي بالذكاء الاصطناعي</h3>
+                        <p class="text-muted-foreground mb-4">
+                            روبوت محادثة ذكي يتفهم اللغة الطبيعية ويقدم إجابات دقيقة ومفيدة
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <button class="text-primary hover:underline">عرض التفاصيل</button>
+                            <div class="flex gap-2">
+                                <i class="fas fa-external-link-alt text-muted-foreground hover:text-primary cursor-pointer"></i>
+                                <i class="fab fa-github text-muted-foreground hover:text-primary cursor-pointer"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 3: Mobile App -->
+                <div class="bg-card border border-border rounded-xl overflow-hidden hover-lift scroll-reveal glass-card">
+                    <!-- Mobile app screenshots showing modern UI design -->
+                    <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600" 
+                         alt="Mobile app interface design" 
+                         class="w-full h-48 object-cover" data-mock-image="true" />
+                    <div class="p-6">
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-cyan-100 text-cyan-600 px-3 py-1 rounded-full text-sm">React Native</span>
+                            <span class="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-sm">Firebase</span>
+                            <span class="bg-pink-100 text-pink-600 px-3 py-1 rounded-full text-sm">Redux</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">تطبيق إدارة المهام</h3>
+                        <p class="text-muted-foreground mb-4">
+                            تطبيق موبايل لإدارة المهام والمشاريع مع ميزات التعاون الجماعي والتزامن
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <button class="text-primary hover:underline">عرض التفاصيل</button>
+                            <div class="flex gap-2">
+                                <i class="fas fa-external-link-alt text-muted-foreground hover:text-primary cursor-pointer"></i>
+                                <i class="fab fa-github text-muted-foreground hover:text-primary cursor-pointer"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 4: Data Analytics Dashboard -->
+                <div class="bg-card border border-border rounded-xl overflow-hidden hover-lift scroll-reveal glass-card">
+                    <!-- Analytics dashboard with charts and graphs -->
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600" 
+                         alt="Data analytics dashboard with charts" 
+                         class="w-full h-48 object-cover" data-mock-image="true" />
+                    <div class="p-6">
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-indigo-100 text-indigo-600 px-3 py-1 rounded-full text-sm">Vue.js</span>
+                            <span class="bg-yellow-100 text-yellow-600 px-3 py-1 rounded-full text-sm">D3.js</span>
+                            <span class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm">Node.js</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">لوحة تحليل البيانات</h3>
+                        <p class="text-muted-foreground mb-4">
+                            لوحة تحكم تفاعلية لتحليل البيانات مع رسوم بيانية متقدمة وتقارير ذكية
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <button class="text-primary hover:underline">عرض التفاصيل</button>
+                            <div class="flex gap-2">
+                                <i class="fas fa-external-link-alt text-muted-foreground hover:text-primary cursor-pointer"></i>
+                                <i class="fab fa-github text-muted-foreground hover:text-primary cursor-pointer"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 5: IoT Platform -->
+                <div class="bg-card border border-border rounded-xl overflow-hidden hover-lift scroll-reveal glass-card">
+                    <!-- IoT dashboard showing connected devices -->
+                    <img src="https://pixabay.com/get/g09c014b6f5f40679148e8b9492986974f0f4f928a48d1385dc0c2ece9fa80386fbda20aab70bfd26c21edba3ee8e88872627017d7c9166d7c4e6ad9e6de26d20_1280.jpg" 
+                         alt="IoT platform with connected smart devices" 
+                         class="w-full h-48 object-cover" data-mock-image="true" />
+                    <div class="p-6">
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-teal-100 text-teal-600 px-3 py-1 rounded-full text-sm">Python</span>
+                            <span class="bg-amber-100 text-amber-600 px-3 py-1 rounded-full text-sm">MQTT</span>
+                            <span class="bg-lime-100 text-lime-600 px-3 py-1 rounded-full text-sm">InfluxDB</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">منصة إنترنت الأشياء</h3>
+                        <p class="text-muted-foreground mb-4">
+                            منصة شاملة لإدارة ومراقبة أجهزة إنترنت الأشياء مع تحليلات في الوقت الفعلي
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <button class="text-primary hover:underline">عرض التفاصيل</button>
+                            <div class="flex gap-2">
+                                <i class="fas fa-external-link-alt text-muted-foreground hover:text-primary cursor-pointer"></i>
+                                <i class="fab fa-github text-muted-foreground hover:text-primary cursor-pointer"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 6: Blockchain Application -->
+                <div class="bg-card border border-border rounded-xl overflow-hidden hover-lift scroll-reveal glass-card">
+                    <!-- Blockchain application interface -->
+                    <img src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600" 
+                         alt="Blockchain application with cryptocurrency interface" 
+                         class="w-full h-48 object-cover" data-mock-image="true" />
+                    <div class="p-6">
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="bg-purple-100 text-purple-600 px-3 py-1 rounded-full text-sm">Solidity</span>
+                            <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm">Web3.js</span>
+                            <span class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm">Ethereum</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">تطبيق البلوك تشين</h3>
+                        <p class="text-muted-foreground mb-4">
+                            تطبيق لامركزي (DApp) للعقود الذكية والمعاملات الآمنة على شبكة الإيثيريوم
+                        </p>
+                        <div class="flex justify-between items-center">
+                            <button class="text-primary hover:underline">عرض التفاصيل</button>
+                            <div class="flex gap-2">
+                                <i class="fas fa-external-link-alt text-muted-foreground hover:text-primary cursor-pointer"></i>
+                                <i class="fab fa-github text-muted-foreground hover:text-primary cursor-pointer"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- @END_MAP )) -->
+            </div>
+            
+            <div class="text-center mt-12">
+                <button class="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 rounded-lg font-semibold transition-all hover:scale-105">
+                    عرض المزيد من المشاريع
+                </button>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: ProjectsSection -->
+
+    <!-- @COMPONENT: CVSection [professional resume display] -->
+    <section id="cv" class="py-20 bg-muted/30">
+        <div class="container mx-auto px-4 lg:px-8">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">السيرة الذاتية</h2>
+                <p class="text-xl text-muted-foreground max-w-3xl mx-auto">
+                    تعرف على خلفيتي المهنية ومهاراتي التقنية وخبراتي في مجال تطوير البرمجيات
+                </p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto">
+                <!-- Professional Summary -->
+                <div class="bg-card border border-border rounded-xl p-8 mb-8 scroll-reveal glass-card">
+                    <h3 class="text-2xl font-bold mb-6 flex items-center">
+                        <i class="fas fa-user-tie text-primary ml-3"></i>
+                        الملخص المهني
+                    </h3>
+                    <p class="text-lg text-muted-foreground leading-relaxed">
+                        مطور برمجيات محترف مع أكثر من 5 سنوات من الخبرة في تطوير تطبيقات الويب والموبايل والذكاء الاصطناعي. 
+                        متخصص في استخدام التقنيات الحديثة مثل Python، JavaScript، React، Django، وتقنيات الذكاء الاصطناعي. 
+                        شغوف بحل المشاكل التقنية المعقدة وتقديم حلول مبتكرة تلبي احتياجات العملاء.
+                    </p>
+                </div>
+                
+                <!-- Skills Section -->
+                <div class="bg-card border border-border rounded-xl p-8 mb-8 scroll-reveal glass-card">
+                    <h3 class="text-2xl font-bold mb-6 flex items-center">
+                        <i class="fas fa-code text-primary ml-3"></i>
+                        المهارات التقنية
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <h4 class="font-semibold text-lg mb-4">لغات البرمجة</h4>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <span>Python</span>
+                                    <div class="flex gap-1">
+                                        <div class="w-4 h-2 bg-primary rounded"></div>
+                                        <div class="w-4 h-2 bg-primary rounded"></div>
+                                        <div class="w-4 h-2 bg-primary rounded"></div>
+                                        <div class="w-4 h-2 bg-primary rounded"></div>
+                                        <div class="w-4 h-2 bg-primary rounded"></div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span>JavaScript</span>
+                                    <div class="flex gap-1">
+                                        <div class="w-4 h-2 bg-primary rounded"></div>
+                                        <div class="w-4 h-2 bg-primary rounded"></div>
+                                        <div class="w-4 h-2 bg-primary rounded"></div>
+                                        <div class="w-4 h-2 bg-primary rounded"></div>
+                                        <div class="w-4 h-2 bg-muted rounded"></div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span>Java</span>
+                                    <div class="flex gap-1">
+                                        <div class="w-4 h-2 bg-primary rounded"></div>
+                                        <div class="w-4 h-2 bg-primary rounded"></div>
+                                        <div class="w-4 h-2 bg-primary rounded"></div>
+                                        <div class="w-4 h-2 bg-primary rounded"></div>
+                                        <div class="w-4 h-2 bg-muted rounded"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-lg mb-4">الأطر والمكتبات</h4>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <span>Django/Flask</span>
+                                    <div class="flex gap-1">
+                                        <div class="w-4 h-2 bg-primary rounded"></div>
+                                        <div class="w-4 h-2 bg-primary rounded"></div>
+                                        <div class="w-4 h-2 bg-primary rounded"></div>
+                                        <div class="w-4 h-2 bg-primary rounded"></div>
+                                        <div class="w-4 h-2 bg-primary rounded"></div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span>React/Vue.js</span>
+                                    <div class="flex gap-1">
+                                        <div class="w-4 h-2 bg-primary rounded"></div>
+                                        <div class="w-4 h-2 bg-primary rounded"></div>
+                                        <div class="w-4 h-2 bg-primary rounded"></div>
+                                        <div class="w-4 h-2 bg-primary rounded"></div>
+                                        <div class="w-4 h-2 bg-muted rounded"></div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span>TensorFlow/PyTorch</span>
+                                    <div class="flex gap-1">
+                                        <div class="w-4 h-2 bg-primary rounded"></div>
+                                        <div class="w-4 h-2 bg-primary rounded"></div>
+                                        <div class="w-4 h-2 bg-primary rounded"></div>
+                                        <div class="w-4 h-2 bg-primary rounded"></div>
+                                        <div class="w-4 h-2 bg-muted rounded"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Education & Experience -->
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Education -->
+                    <div class="bg-card border border-border rounded-xl p-8 scroll-reveal glass-card">
+                        <h3 class="text-2xl font-bold mb-6 flex items-center">
+                            <i class="fas fa-graduation-cap text-primary ml-3"></i>
+                            التعليم
+                        </h3>
+                        <div class="space-y-6">
+                            <div class="border-r-4 border-primary pr-4">
+                                <h4 class="font-semibold text-lg">بكالوريوس علوم الحاسوب</h4>
+                                <p class="text-muted-foreground">جامعة صنعاء</p>
+                                <p class="text-sm text-muted-foreground">2018 - 2022</p>
+                            </div>
+                            <div class="border-r-4 border-secondary pr-4">
+                                <h4 class="font-semibold text-lg">دبلوم البرمجة المتقدمة</h4>
+                                <p class="text-muted-foreground">معهد التقنيات المتقدمة</p>
+                                <p class="text-sm text-muted-foreground">2017 - 2018</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Experience -->
+                    <div class="bg-card border border-border rounded-xl p-8 scroll-reveal glass-card">
+                        <h3 class="text-2xl font-bold mb-6 flex items-center">
+                            <i class="fas fa-briefcase text-primary ml-3"></i>
+                            الخبرة المهنية
+                        </h3>
+                        <div class="space-y-6">
+                            <div class="border-r-4 border-primary pr-4">
+                                <h4 class="font-semibold text-lg">مطور برمجيات كبير</h4>
+                                <p class="text-muted-foreground">مطور مستقل</p>
+                                <p class="text-sm text-muted-foreground">2020 - الآن</p>
+                            </div>
+                            <div class="border-r-4 border-secondary pr-4">
+                                <h4 class="font-semibold text-lg">مطور تطبيقات الويب</h4>
+                                <p class="text-muted-foreground">شركة التقنيات الذكية</p>
+                                <p class="text-sm text-muted-foreground">2019 - 2020</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Certifications -->
+                <div class="bg-card border border-border rounded-xl p-8 mt-8 scroll-reveal glass-card">
+                    <h3 class="text-2xl font-bold mb-6 flex items-center">
+                        <i class="fas fa-certificate text-primary ml-3"></i>
+                        الشهادات والجوائز
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-award text-primary"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold">شهادة AWS Solutions Architect</h4>
+                                <p class="text-sm text-muted-foreground">Amazon Web Services - 2023</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-trophy text-secondary"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold">جائزة أفضل مطور شاب</h4>
+                                <p class="text-sm text-muted-foreground">مؤتمر التقنية - 2022</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Download CV Button -->
+                <div class="text-center mt-12 scroll-reveal">
+                    <button class="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 rounded-lg font-semibold transition-all hover:scale-105 shadow-lg">
+                        <i class="fas fa-download ml-2"></i>
+                        تحميل السيرة الذاتية PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: CVSection -->
+
+    <!-- @COMPONENT: ContactSection [comprehensive contact methods] -->
+    <section id="contact" class="py-20">
+        <div class="container mx-auto px-4 lg:px-8">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">تواصل معنا</h2>
+                <p class="text-xl text-muted-foreground max-w-3xl mx-auto">
+                    هل لديك مشروع أو فكرة تريد تطويرها؟ تواصل معنا لنناقش كيف يمكننا مساعدتك في تحقيق أهدافك
+                </p>
+            </div>
+            
+            <div class="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+                <!-- Contact Information -->
+                <div class="space-y-8 scroll-reveal">
+                    <div class="bg-card border border-border rounded-xl p-8 glass-card">
+                        <h3 class="text-2xl font-bold mb-6">معلومات الاتصال</h3>
+                        <div class="space-y-6">
+                            <!-- Email -->
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-envelope text-primary"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold">البريد الإلكتروني</h4>
+                                    <p class="text-muted-foreground" data-bind="contact.email">eng7mi@gmail.com</p>
+                                    <p class="text-muted-foreground" data-bind="contact.email_secondary">abodx1234freey@gmail.com</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Phone -->
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-phone text-secondary"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold">رقم الهاتف</h4>
+                                    <p class="text-muted-foreground" data-bind="contact.phone">+967771442176</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Location -->
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-map-marker-alt text-accent-foreground"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold">الموقع</h4>
+                                    <p class="text-muted-foreground">صنعاء، اليمن</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Social Media -->
+                    <div class="bg-card border border-border rounded-xl p-8 glass-card">
+                        <h3 class="text-2xl font-bold mb-6">وسائل التواصل الاجتماعي</h3>
+                        <div class="flex flex-wrap gap-4">
+                            <a href="https://www.instagram.com/eng_7mi?igsh=MXhib3J4eHI2dnZ0dA==" 
+                               class="flex items-center gap-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white px-6 py-3 rounded-lg hover:scale-105 transition-transform" 
+                               target="_blank">
+                                <i class="fab fa-instagram text-xl"></i>
+                                <span>Instagram</span>
+                            </a>
+                            <a href="#" class="flex items-center gap-3 bg-blue-600 text-white px-6 py-3 rounded-lg hover:scale-105 transition-transform">
+                                <i class="fab fa-linkedin text-xl"></i>
+                                <span>LinkedIn</span>
+                            </a>
+                            <a href="#" class="flex items-center gap-3 bg-gray-800 text-white px-6 py-3 rounded-lg hover:scale-105 transition-transform">
+                                <i class="fab fa-github text-xl"></i>
+                                <span>GitHub</span>
+                            </a>
+                            <a href="#" class="flex items-center gap-3 bg-blue-500 text-white px-6 py-3 rounded-lg hover:scale-105 transition-transform">
+                                <i class="fab fa-twitter text-xl"></i>
+                                <span>Twitter</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Contact Form -->
+                <div class="bg-card border border-border rounded-xl p-8 scroll-reveal glass-card">
+                    <h3 class="text-2xl font-bold mb-6">أرسل رسالة</h3>
+                    <form class="space-y-6" data-implementation="Should integrate with backend contact form handler">
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium mb-2">الاسم الكامل</label>
+                                <input type="text" 
+                                       class="w-full px-4 py-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent bg-background" 
+                                       placeholder="أدخل اسمك الكامل" 
+                                       data-mock="true">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">البريد الإلكتروني</label>
+                                <input type="email" 
+                                       class="w-full px-4 py-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent bg-background" 
+                                       placeholder="your@email.com" 
+                                       data-mock="true">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium mb-2">الموضوع</label>
+                            <input type="text" 
+                                   class="w-full px-4 py-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent bg-background" 
+                                   placeholder="موضوع الرسالة" 
+                                   data-mock="true">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium mb-2">نوع الخدمة</label>
+                            <select class="w-full px-4 py-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent bg-background" data-mock="true">
+                                <option>اختر نوع الخدمة</option>
+                                <option>تطوير موقع ويب</option>
+                                <option>تطوير تطبيق موبايل</option>
+                                <option>خدمات الذكاء الاصطناعي</option>
+                                <option>استشارة تقنية</option>
+                                <option>أخرى</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium mb-2">الرسالة</label>
+                            <textarea rows="6" 
+                                      class="w-full px-4 py-3 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent bg-background" 
+                                      placeholder="اكتب رسالتك هنا..." 
+                                      data-mock="true"></textarea>
+                        </div>
+                        
+                        <button type="submit" 
+                                class="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-4 rounded-lg font-semibold transition-all hover:scale-105 shadow-lg"
+                                data-event="click:handleContactSubmit"
+                                data-implementation="Should validate form and send email">
+                            <i class="fas fa-paper-plane ml-2"></i>
+                            إرسال الرسالة
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: ContactSection -->
+
+    <!-- @COMPONENT: Footer [site footer with links and info] -->
+    <footer class="bg-card border-t border-border py-12">
+        <div class="container mx-auto px-4 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <!-- Company Info -->
+                <div class="md:col-span-2">
+                    <div class="flex items-center space-x-3 rtl:space-x-reverse mb-4">
+                        <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+                            <i class="fas fa-code text-primary-foreground text-lg"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold gradient-text">Alqudimi Technology</h3>
+                            <p class="text-xs text-muted-foreground">تكنولوجيا القديمي</p>
+                        </div>
+                    </div>
+                    <p class="text-muted-foreground mb-4 leading-relaxed">
+                        نحن نقدم حلول برمجية مبتكرة ومتطورة تساعد الشركات والأفراد على تحقيق أهدافهم التقنية 
+                        بأعلى معايير الجودة والاحترافية.
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="https://www.instagram.com/eng_7mi?igsh=MXhib3J4eHI2dnZ0dA==" 
+                           class="w-10 h-10 bg-accent rounded-lg flex items-center justify-center hover:scale-110 transition-transform" 
+                           target="_blank">
+                            <i class="fab fa-instagram text-accent-foreground"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-accent rounded-lg flex items-center justify-center hover:scale-110 transition-transform">
+                            <i class="fab fa-linkedin text-accent-foreground"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-accent rounded-lg flex items-center justify-center hover:scale-110 transition-transform">
+                            <i class="fab fa-github text-accent-foreground"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="font-semibold text-lg mb-4">روابط سريعة</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-muted-foreground hover:text-primary transition-colors">الرئيسية</a></li>
+                        <li><a href="#services" class="text-muted-foreground hover:text-primary transition-colors">الخدمات</a></li>
+                        <li><a href="#projects" class="text-muted-foreground hover:text-primary transition-colors">المشاريع</a></li>
+                        <li><a href="#cv" class="text-muted-foreground hover:text-primary transition-colors">السيرة الذاتية</a></li>
+                        <li><a href="#contact" class="text-muted-foreground hover:text-primary transition-colors">التواصل</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact Info -->
+                <div>
+                    <h4 class="font-semibold text-lg mb-4">معلومات الاتصال</h4>
+                    <div class="space-y-3 text-muted-foreground">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-envelope text-primary"></i>
+                            <span class="text-sm">eng7mi@gmail.com</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-phone text-primary"></i>
+                            <span class="text-sm">+967771442176</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-map-marker-alt text-primary"></i>
+                            <span class="text-sm">صنعاء، اليمن</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-border pt-8 mt-8 text-center">
+                <p class="text-muted-foreground">
+                    © 2024 Alqudimi Technology. جميع الحقوق محفوظة.
+                </p>
+            </div>
+        </div>
+    </footer>
+    <!-- @END_COMPONENT: Footer -->
+
+    <!-- @STATE: theme:string = 'light' -->
+    <!-- @STATE: soundEnabled:boolean = true -->
+    <!-- @STATE: isScrolled:boolean = false -->
+
+    <script>
+        (function() {
+            // Theme Management
+            const themeToggle = document.getElementById('themeToggle');
+            const soundToggle = document.getElementById('soundToggle');
+            const body = document.body;
+            
+            // Load saved theme
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            const savedSound = localStorage.getItem('soundEnabled') !== 'false';
+            
+            body.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+            updateSoundIcon(savedSound);
+            
+            // Theme Toggle
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = body.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                
+                body.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                updateThemeIcon(newTheme);
+                
+                // TODO: Implement theme transition animation
+                // TODO: Play theme toggle sound if sound is enabled
+            });
+            
+            // Sound Toggle
+            soundToggle.addEventListener('click', () => {
+                const currentSound = localStorage.getItem('soundEnabled') !== 'false';
+                const newSound = !currentSound;
+                
+                localStorage.setItem('soundEnabled', newSound);
+                updateSoundIcon(newSound);
+                
+                // TODO: Play toggle sound feedback
+            });
+            
+            function updateThemeIcon(theme) {
+                const icon = themeToggle.querySelector('i');
+                icon.className = theme === 'dark' ? 'fas fa-sun text-muted-foreground' : 'fas fa-moon text-muted-foreground';
+            }
+            
+            function updateSoundIcon(enabled) {
+                const icon = soundToggle.querySelector('i');
+                icon.className = enabled ? 'fas fa-volume-up text-muted-foreground' : 'fas fa-volume-mute text-muted-foreground';
+            }
+            
+            // Scroll Reveal Animation
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe all scroll-reveal elements
+            document.querySelectorAll('.scroll-reveal').forEach(el => {
+                observer.observe(el);
+            });
+            
+            // Smooth Scrolling for Navigation Links
+            document.querySelectorAll('a[href^="#"]').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                        
+                        // TODO: Play navigation click sound if sound is enabled
+                    }
+                });
+            });
+            
+            // Contact Form Handling
+            const contactForm = document.querySelector('form');
+            if (contactForm) {
+                contactForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    
+                    // TODO: Implement form validation
+                    // TODO: Send form data to backend
+                    // TODO: Show success/error notifications
+                    // TODO: Play form submission sound if sound is enabled
+                    
+                    console.log('Contact form submitted - TODO: Implement backend integration');
+                });
+            }
+            
+            // Project Filter Functionality
+            const filterButtons = document.querySelectorAll('#projects button');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => {
+                        btn.classList.remove('bg-primary', 'text-primary-foreground');
+                        btn.classList.add('bg-accent', 'text-accent-foreground');
+                    });
+                    
+                    // Add active class to clicked button
+                    button.classList.remove('bg-accent', 'text-accent-foreground');
+                    button.classList.add('bg-primary', 'text-primary-foreground');
+                    
+                    // TODO: Implement project filtering logic
+                    // TODO: Play filter click sound if sound is enabled
+                });
+            });
+            
+            // Add hover sound effects to interactive elements
+            document.querySelectorAll('button, .hover-lift, a').forEach(element => {
+                element.addEventListener('mouseenter', () => {
+                    // TODO: Play hover sound if sound is enabled
+                });
+            });
+            
+            // Particle Background Animation
+            // TODO: Implement particle animation using Canvas API or WebGL
+            
+            // Navigation Bar Scroll Effect
+            window.addEventListener('scroll', () => {
+                const nav = document.querySelector('nav');
+                if (window.scrollY > 50) {
+                    nav.style.backdropFilter = 'blur(20px)';
+                } else {
+                    nav.style.backdropFilter = 'blur(10px)';
+                }
+            });
+            
+        })();
+    </script>
+</body>
+</html>
