@@ -1,7 +1,0 @@
-curl -X POST https://alqudimiwebsite.onrender.com/api/admin/init \
-  -H "Content-Type: application/json" \
-  -d '{
-    "username": "alqudimi_admin",
-    "password": "Abodx1234",
-    "email": "eng7mi@gmail.com"
-  }'

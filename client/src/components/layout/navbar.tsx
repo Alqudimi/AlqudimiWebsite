@@ -47,7 +47,7 @@ export default function Navbar() {
             <div className="flex items-center gap-3 hover:scale-105 transition-transform duration-300">
               <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center p-1">
                 <img 
-                  src="/client/src/assets/alqudimi-logo.png" 
+                  src="/attached_assets/alqudimi-logo.png" 
                   alt="Alqudimi Technology Logo" 
                   className="w-full h-full object-contain" 
                 />
@@ -140,7 +140,7 @@ export default function Navbar() {
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center p-1">
                         <img 
-                          src="/client/src/assets/alqudimi-logo.png" 
+                          src="/attached_assets/alqudimi-logo.png" 
                           alt="Alqudimi Technology Logo" 
                           className="w-full h-full object-contain" 
                         />
