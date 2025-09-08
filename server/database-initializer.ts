@@ -2,6 +2,7 @@ import { Pool, neonConfig } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import ws from "ws";
 import * as schema from "@shared/schema";
+import { eq } from "drizzle-orm";
 import bcrypt from "bcrypt";
 
 neonConfig.webSocketConstructor = ws;
@@ -214,16 +215,19 @@ export class DatabaseInitializer {
     try {
       console.log('🔄 Initializing database...');
       
-      // Check if admin user already exists
-      const existingAdmin = await this.db.select()
-        .from(schema.adminUsers)
+      // Always ensure admin user exists, especially important for production
+      await this.ensureAdminUserExists();
+      
+      // Check if other data already exists
+      const existingServices = await this.db.select()
+        .from(schema.services)
         .limit(1);
 
-      if (existingAdmin.length === 0) {
+      if (existingServices.length === 0) {
         await this.seedInitialData();
         console.log('✅ Database initialized with initial data');
       } else {
-        console.log('ℹ️ Database already contains data, skipping initialization');
+        console.log('ℹ️ Database already contains data, skipping additional seeding');
       }
 
       return true;
@@ -234,20 +238,42 @@ export class DatabaseInitializer {
   }
 
   /**
+   * Ensure admin user exists - critical for production deployments
+   */
+  async ensureAdminUserExists(): Promise<void> {
+    if (!this.db) return;
+
+    try {
+      const existingAdmin = await this.db.select()
+        .from(schema.adminUsers)
+        .where(schema.eq(schema.adminUsers.username, initialData.adminUser.username))
+        .limit(1);
+
+      if (existingAdmin.length === 0) {
+        const hashedPassword = await bcrypt.hash(initialData.adminUser.password, 10);
+        await this.db.insert(schema.adminUsers).values({
+          username: initialData.adminUser.username,
+          password: hashedPassword,
+          email: initialData.adminUser.email
+        });
+        console.log('✅ Admin user created (production-safe)');
+      } else {
+        console.log('ℹ️ Admin user already exists');
+      }
+    } catch (error) {
+      console.error('❌ Failed to ensure admin user exists:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Seed initial data into the database
    */
   private async seedInitialData(): Promise<void> {
     if (!this.db) return;
 
     try {
-      // Create admin user
-      const hashedPassword = await bcrypt.hash(initialData.adminUser.password, 10);
-      await this.db.insert(schema.adminUsers).values({
-        username: initialData.adminUser.username,
-        password: hashedPassword,
-        email: initialData.adminUser.email
-      });
-      console.log('✅ Admin user created');
+      // Admin user is handled separately in ensureAdminUserExists
 
       // Create services
       for (const service of initialData.services) {

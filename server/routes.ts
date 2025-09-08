@@ -130,6 +130,47 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Admin Authentication
   
+  // Special initialization endpoint for production deployments
+  app.post("/api/init-admin", async (req, res) => {
+    try {
+      // Check if any admin user exists
+      const existingAdmins = await storage.getAllAdminUsers();
+      
+      if (existingAdmins.length > 0) {
+        return res.status(409).json({ 
+          message: "Admin user already exists. Use /api/admin/login to sign in.",
+          loginEndpoint: "/api/admin/login",
+          defaultCredentials: {
+            username: "admin",
+            password: "admin123"
+          }
+        });
+      }
+
+      // Create the default admin user if none exists
+      const hashedPassword = await bcrypt.hash("admin123", 10);
+      const adminUser = await storage.createAdminUser({
+        username: "admin",
+        password: hashedPassword,
+        email: "admin@alqudimi.com"
+      });
+
+      res.json({
+        message: "✅ Admin user created successfully! You can now login.",
+        loginEndpoint: "/api/admin/login", 
+        credentials: {
+          username: "admin",
+          password: "admin123"
+        },
+        note: "⚠️ Please change the password after first login for security."
+      });
+
+    } catch (error) {
+      console.error("Init admin error:", error);
+      res.status(500).json({ message: "Failed to initialize admin user" });
+    }
+  });
+  
   // Admin login
   app.post("/api/admin/login", async (req, res) => {
     try {
@@ -141,7 +182,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const user = await storage.getAdminUserByUsername(username);
       if (!user) {
-        return res.status(401).json({ message: "Invalid credentials" });
+        return res.status(401).json({ 
+          message: "Invalid credentials. If this is a fresh deployment, visit /api/init-admin to create the admin user.",
+          initEndpoint: "/api/init-admin"
+        });
       }
 
       const validPassword = await bcrypt.compare(password, user.password);

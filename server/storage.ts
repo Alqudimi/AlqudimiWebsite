@@ -13,6 +13,7 @@ import { eq, desc, asc, sql } from "drizzle-orm";
 
 export interface IStorage {
   // Admin Users
+  getAllAdminUsers(): Promise<AdminUser[]>;
   getAdminUser(id: string): Promise<AdminUser | undefined>;
   getAdminUserByUsername(username: string): Promise<AdminUser | undefined>;
   createAdminUser(user: InsertAdminUser): Promise<AdminUser>;
@@ -275,6 +276,15 @@ function initializeMemoryData() {
 
 export class DatabaseStorage implements IStorage {
   // Admin Users
+  async getAllAdminUsers(): Promise<AdminUser[]> {
+    const db = await getDB();
+    if (!db) {
+      initializeMemoryData();
+      return memoryData.adminUsers;
+    }
+    return await db.select().from(adminUsers);
+  }
+
   async getAdminUser(id: string): Promise<AdminUser | undefined> {
     const db = await getDB();
     if (!db) {
