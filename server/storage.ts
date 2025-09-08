@@ -8,7 +8,7 @@ import {
   type Testimonial, type InsertTestimonial, type NewsletterSubscriber, type InsertNewsletterSubscriber,
   type Analytics, type InsertAnalytics
 } from "@shared/schema";
-import { db } from "./db";
+import { getDB, isDatabaseConnected } from "./db-improved";
 import { eq, desc, asc, sql } from "drizzle-orm";
 
 export interface IStorage {
@@ -103,14 +103,194 @@ export interface IStorage {
   getPageViewStats(days?: number): Promise<{ path: string; views: number }[]>;
 }
 
+// In-memory fallback data
+const memoryData = {
+  services: [] as Service[],
+  projects: [] as Project[],
+  cvData: [] as CvData[],
+  contactInfo: [] as ContactInfo[],
+  contactMessages: [] as ContactMessage[],
+  siteSettings: [] as SiteSetting[],
+  adminUsers: [] as AdminUser[],
+  initialized: false
+};
+
+// Initialize memory data with defaults
+function initializeMemoryData() {
+  if (memoryData.initialized) return;
+  
+  console.log('🧠 Initializing memory storage with default data...');
+  
+  // Default services
+  memoryData.services = [
+    {
+      id: '1',
+      title: 'تطوير مواقع الويب',
+      titleEn: 'Web Development',
+      description: 'تطوير مواقع ويب متجاوبة وسريعة باستخدام أحدث التقنيات',
+      descriptionEn: 'Developing responsive and fast websites using the latest technologies',
+      icon: 'Code',
+      color: 'blue',
+      features: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS'],
+      featuresEn: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS'],
+      isActive: true,
+      order: 1,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    {
+      id: '2',
+      title: 'تطبيقات الهاتف المحمول',
+      titleEn: 'Mobile Applications',
+      description: 'تطوير تطبيقات هاتف محمول متقدمة لنظامي iOS و Android',
+      descriptionEn: 'Developing advanced mobile apps for iOS and Android',
+      icon: 'Smartphone',
+      color: 'green',
+      features: ['React Native', 'Flutter', 'Native iOS', 'Native Android'],
+      featuresEn: ['React Native', 'Flutter', 'Native iOS', 'Native Android'],
+      isActive: true,
+      order: 2,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }
+  ];
+  
+  // Default projects
+  memoryData.projects = [
+    {
+      id: '1',
+      title: 'موقع الشركة الشخصي',
+      titleEn: 'Personal Company Website',
+      description: 'موقع ويب شخصي متطور لعرض الخدمات والمشاريع',
+      descriptionEn: 'Advanced personal website to showcase services and projects',
+      shortDescription: 'موقع شخصي متجاوب',
+      shortDescriptionEn: 'Responsive personal website',
+      technologies: ['React', 'TypeScript', 'Tailwind CSS', 'Node.js'],
+      images: [],
+      liveUrl: '',
+      githubUrl: '',
+      category: 'web',
+      isActive: true,
+      isFeatured: true,
+      order: 1,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }
+  ];
+  
+  // Default CV data
+  memoryData.cvData = [
+    {
+      id: '1',
+      type: 'personal',
+      title: 'عبدالعزيز محمد القديمي',
+      titleEn: 'Abdulaziz Mohammed Alqudimi',
+      description: 'مطور برمجيات متخصص في تطوير الويب والتطبيقات',
+      descriptionEn: 'Software developer specialized in web and app development',
+      subtitle: 'مطور برمجيات',
+      subtitleEn: 'Software Developer',
+      location: 'الرياض، السعودية',
+      locationEn: 'Riyadh, Saudi Arabia',
+      startDate: null,
+      endDate: null,
+      level: null,
+      icon: 'User',
+      url: null,
+      skills: [],
+      isActive: true,
+      order: 1,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    {
+      id: '2',
+      type: 'skill',
+      title: 'React',
+      titleEn: 'React',
+      description: 'مكتبة جافا سكريبت لبناء واجهات المستخدم',
+      descriptionEn: 'JavaScript library for building user interfaces',
+      subtitle: null,
+      subtitleEn: null,
+      location: null,
+      locationEn: null,
+      startDate: null,
+      endDate: null,
+      level: 5,
+      icon: 'Code',
+      url: null,
+      skills: ['React', 'Redux', 'Context API', 'Hooks'],
+      isActive: true,
+      order: 1,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }
+  ];
+  
+  // Default contact info
+  memoryData.contactInfo = [
+    {
+      id: '1',
+      type: 'email',
+      label: 'البريد الإلكتروني',
+      labelEn: 'Email',
+      value: 'contact@alqudimi.com',
+      icon: 'Mail',
+      url: null,
+      isPrimary: true,
+      isActive: true,
+      order: 1,
+      createdAt: new Date()
+    },
+    {
+      id: '2',
+      type: 'phone',
+      label: 'رقم الهاتف',
+      labelEn: 'Phone Number',
+      value: '+966 50 123 4567',
+      icon: 'Phone',
+      url: null,
+      isPrimary: false,
+      isActive: true,
+      order: 2,
+      createdAt: new Date()
+    },
+    {
+      id: '3',
+      type: 'address',
+      label: 'الموقع',
+      labelEn: 'Location',
+      value: 'الرياض، المملكة العربية السعودية',
+      icon: 'MapPin',
+      url: null,
+      isPrimary: false,
+      isActive: true,
+      order: 3,
+      createdAt: new Date()
+    }
+  ];
+  
+  memoryData.initialized = true;
+  console.log('✅ Memory storage initialized with CV data and contact info');
+}
+
 export class DatabaseStorage implements IStorage {
   // Admin Users
   async getAdminUser(id: string): Promise<AdminUser | undefined> {
+    const db = await getDB();
+    if (!db) {
+      initializeMemoryData();
+      return memoryData.adminUsers.find(user => user.id === id);
+    }
     const [user] = await db.select().from(adminUsers).where(eq(adminUsers.id, id));
     return user || undefined;
   }
 
   async getAdminUserByUsername(username: string): Promise<AdminUser | undefined> {
+    const db = await getDB();
+    if (!db) {
+      initializeMemoryData();
+      return memoryData.adminUsers.find(user => user.username === username);
+    }
     const [user] = await db.select().from(adminUsers).where(eq(adminUsers.username, username));
     return user || undefined;
   }
@@ -122,10 +302,20 @@ export class DatabaseStorage implements IStorage {
 
   // Services
   async getAllServices(): Promise<Service[]> {
+    const db = await getDB();
+    if (!db) {
+      initializeMemoryData();
+      return memoryData.services.sort((a, b) => a.order - b.order);
+    }
     return await db.select().from(services).orderBy(asc(services.order));
   }
 
   async getActiveServices(): Promise<Service[]> {
+    const db = await getDB();
+    if (!db) {
+      initializeMemoryData();
+      return memoryData.services.filter(s => s.isActive).sort((a, b) => a.order - b.order);
+    }
     return await db.select().from(services)
       .where(eq(services.isActive, true))
       .orderBy(asc(services.order));
@@ -169,6 +359,11 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getActiveProjects(): Promise<Project[]> {
+    const db = await getDB();
+    if (!db) {
+      initializeMemoryData();
+      return memoryData.projects.filter(p => p.isActive).sort((a, b) => a.order - b.order);
+    }
     return await db.select().from(projects)
       .where(eq(projects.isActive, true))
       .orderBy(asc(projects.order), desc(projects.createdAt));
@@ -220,12 +415,22 @@ export class DatabaseStorage implements IStorage {
 
   // CV Data
   async getCvDataByType(type: string): Promise<CvData[]> {
+    const db = await getDB();
+    if (!db) {
+      initializeMemoryData();
+      return memoryData.cvData.filter(cv => cv.type === type).sort((a, b) => a.order - b.order);
+    }
     return await db.select().from(cvData)
       .where(eq(cvData.type, type))
       .orderBy(asc(cvData.order));
   }
 
   async getAllCvData(): Promise<CvData[]> {
+    const db = await getDB();
+    if (!db) {
+      initializeMemoryData();
+      return memoryData.cvData.sort((a, b) => a.order - b.order);
+    }
     return await db.select().from(cvData).orderBy(asc(cvData.order));
   }
 
@@ -260,12 +465,22 @@ export class DatabaseStorage implements IStorage {
     return result.rowCount !== null && result.rowCount > 0;
   }
 
-  // Contact Info
+  // Contact Info  
   async getAllContactInfo(): Promise<ContactInfo[]> {
+    const db = await getDB();
+    if (!db) {
+      initializeMemoryData();
+      return memoryData.contactInfo.sort((a, b) => a.order - b.order);
+    }
     return await db.select().from(contactInfo).orderBy(asc(contactInfo.order));
   }
 
   async getActiveContactInfo(): Promise<ContactInfo[]> {
+    const db = await getDB();
+    if (!db) {
+      initializeMemoryData();
+      return memoryData.contactInfo.filter(info => info.isActive).sort((a, b) => a.order - b.order);
+    }
     return await db.select().from(contactInfo)
       .where(eq(contactInfo.isActive, true))
       .orderBy(asc(contactInfo.order));
@@ -296,6 +511,11 @@ export class DatabaseStorage implements IStorage {
 
   // Contact Messages
   async getAllContactMessages(): Promise<ContactMessage[]> {
+    const db = await getDB();
+    if (!db) {
+      initializeMemoryData();
+      return memoryData.contactMessages.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    }
     return await db.select().from(contactMessages).orderBy(desc(contactMessages.createdAt));
   }
 

@@ -1,6 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { getDB, isDatabaseConnected, getConnectionStatus } from "./db-improved";
 
 const app = express();
 app.use(express.json());
@@ -37,6 +38,20 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Initialize database system
+  console.log('🚀 Initializing Alqudimi Technology Portfolio...');
+  
+  // Initialize database (with fallback to memory)
+  await getDB();
+  
+  const status = getConnectionStatus();
+  if (status.connected) {
+    console.log('✅ Using PostgreSQL database storage');
+  } else {
+    console.log('🧠 Using memory storage fallback');
+    console.log('⚠️ Data will not persist between server restarts');
+  }
+
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
